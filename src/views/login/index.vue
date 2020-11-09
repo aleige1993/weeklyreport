@@ -1,11 +1,11 @@
-
 <template>
   <div>
-      <router-view/>
+    login
   </div>
 </template>
 
 <script>
+
   export default {
     name:'',
     props:[''],
