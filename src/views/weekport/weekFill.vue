@@ -76,7 +76,10 @@ import {ref,onMounted,reactive,toRefs, getCurrentInstance} from 'vue'
     name:'weekfill',
     props:[''],
    setup(){
-       
+       const {ctx} = getCurrentInstance()
+       onMounted(()=>{
+           ctx.$store.commit('setHead',[4,'填写周报 - ','已逾期'])
+       })
        return{
            
        }

@@ -1,6 +1,32 @@
-<template> 
+<template>
+    <van-overlay :show="showlayer" @click="onHideLayer" z-index='5' />
+    <div class="review_box" v-if="boxIput">
+        <div class="had">
+            <span class="title">批复意见</span>
+            <span class="name">批复人：张三</span>        
+        </div>
+        <div class="box_iput">
+            <textarea class="box_text" v-model="textarea" cols="30" rows="10" placeholder="请输入周报批复意见"></textarea>
+        </div>
+        <div class="box_foot" @click='onBoxComf'>
+            提交
+        </div>
+    </div>
+    <div class="comfirm" v-if="boxComf">
+        <div class="icon_text">
+            <img src="@/assets/img/icon_gt.png" alt="">
+            <p class="showtest">
+                提交周报后将<span>无法修改</span>，<br/> 请您确认检查无误并提交？
+            </p>
+        </div>
+        <div class="but_but">
+            <div @click="onHideLayer">取消</div>
+            <div class="confirmbut">确定</div>
+        </div>
+    </div>
+
     <div class="scroll_view">
-        <div class="fixed_review">
+        <div class="fixed_review" @click="onShowLayer">
             <img src="@/assets/img/icon_yj.png" alt="">
             <span>批复意见</span>
         </div>
@@ -64,15 +90,129 @@ import {ref,onMounted,reactive,toRefs, getCurrentInstance} from 'vue'
     name:'weekCheck',
     props:[''],
    setup(){
-       
+       const data = reactive({
+           showlayer:false,
+           boxComf:false,
+           boxIput:false,
+           textarea:''
+       })
+      const {ctx } = getCurrentInstance()
+       //控制layer
+       const onShowLayer = () =>{
+           data.showlayer = true 
+           data.boxIput = true
+       }
+       const onHideLayer = () =>{
+           data.showlayer = false
+           data.boxComf = false
+           data.boxIput = false
+       }
+        const onBoxComf = () =>{
+            data.boxComf = true
+            data.boxIput = false
+        }
+        onMounted(()=>{
+            ctx.$store.commit('setHead',[2,'查看周报 - ','张三']) 
+        })
+        const refdata = toRefs(data)
        return{
-           
+           ...refdata,
+           onShowLayer,
+           onHideLayer,
+           onBoxComf
        }
    }
   }
 
 </script>
 <style lang='css' scoped>
+.confirmbut{
+    color: #005C8D;
+    border-left:1px solid #ccc;
+}
+.but_but{
+    display: flex;
+    justify-content: space-around;
+    border-top:1px solid #ccc;
+    height: 86px;
+    line-height: 86px;
+}
+.but_but div{
+    width: 50%;
+    text-align: center;
+}
+    .showtest{
+        font-size: 30px;
+        color: #333333;
+        line-height: 50px;
+    }
+    .showtest span{
+        color:#E10000;
+        font: 30px;
+    }
+    .icon_text{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding:75px 100px;
+    }
+    .icon_text img{
+        width:92px;
+        height: 92px;
+        display: inline-block;
+        margin-right: 20px;
+    }
+    .box_foot{
+        text-align: center;
+        line-height:86px;
+        color: #005C8D;
+        font-size: 30px;
+        border-top:1px solid #CCCCCC;
+        margin-top:50px;
+    }
+    .review_box{
+        background-color: #fff;
+        border-radius: 20px;
+        width:94%;
+        position: fixed;
+        z-index: 6;
+        top:30%;
+        left:3%;
+    }
+    .comfirm{
+        background-color: #fff;
+        border-radius: 20px;
+        width:94%;
+        position: fixed;
+        z-index: 8;
+        top:30%;
+        left:3%;  
+    }
+    .review_box .had{
+        display: flex;
+        padding: 50px;
+        justify-content: space-between;
+        align-items: flex-end;
+    }
+    .title{ 
+        font-size: 36px; 
+        font-weight: bold;
+        color: #333333;
+    }
+    .name{ 
+        font-size: 28px; 
+        color: #999999;
+    }
+    .box_iput{
+        width: 100%;
+        padding:0 50px;
+    }
+    .box_text{
+        border:none;
+        width: 100%;
+        font-size: 28px; 
+        color: #333333;
+    }
     .time_p{
         width: 100%;
         height: 40px;

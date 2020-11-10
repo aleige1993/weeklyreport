@@ -9,7 +9,7 @@ const routes = [{
     {
         path: '/layout',
         name: 'layout',
-        redirect: '/layout/weekCheck',
+        redirect: '/layout/historyPort',
         component: () =>
             import ('@/views/index'),
         children: [{
@@ -43,9 +43,30 @@ const routes = [{
             {
                 path: 'weekCheck',
                 name: 'weekCheck',
-                meta: { title: '查看周报 - 张三' },
+                meta: { title: '查看周报' },
                 component: () =>
                     import ('@/views/weekport/weekCheck')
+            },
+            {
+                path: 'portDetail',
+                name: 'portDetail',
+                meta: { title: '工作总结 - 填写' },
+                component: () =>
+                    import ('@/views/weekport/portDetail')
+            },
+            {
+                path: 'portDetail2',
+                name: 'portDetail2',
+                meta: { title: '存在问题' },
+                component: () =>
+                    import ('@/views/weekport/portDetail2')
+            },
+            {
+                path: 'portDetail3',
+                name: 'portDetail3',
+                meta: { title: '下周计划 -填写' },
+                component: () =>
+                    import ('@/views/weekport/portDetail3')
             }
         ]
     },
