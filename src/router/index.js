@@ -2,9 +2,15 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 const routes = [{
         path: '/',
         name: 'login',
-        redirect: '/layout',
+        redirect: '/user',
         component: () =>
             import ('@/views/login')
+    },
+    {
+        path: '/user',
+        name: 'user',
+        component: () =>
+            import ('@/views/user/index'),
     },
     {
         path: '/layout',
@@ -67,9 +73,16 @@ const routes = [{
                 meta: { title: '下周计划 -填写' },
                 component: () =>
                     import ('@/views/weekport/portDetail3')
+            },
+            {
+                path: 'password',
+                name: 'password',
+                meta: { title: '修改密码' },
+                component: () =>
+                    import ('@/views/weekport/changesPassword')
             }
         ]
-    },
+    }
     // {
     //     path: '/agreement', name: 'agreement', component: resolve => { require(['@/pages/page-agreement'], resolve)},
     //     children: [

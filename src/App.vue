@@ -1,18 +1,17 @@
-
 <template>
-  <div>
-      <router-view/>
-  </div>
+<div>
+    <router-view />
+</div>
 </template>
 
 <script>
-  export default {
-    name:'',
-    props:[''],
-    data () {
-      return {
+export default {
+    name: '',
+    props: [''],
+    data() {
+        return {
 
-      };
+        };
     },
 
     components: {},
@@ -27,9 +26,9 @@
 
     watch: {}
 
-  }
-
+}
 </script>
-<style lang='' scoped>
+
+<style lang="css" scoped>
 
 </style>
