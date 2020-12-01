@@ -4,7 +4,7 @@
         <div class="icon_text">
             <img src="@/assets/img/icon_gt.png" alt="">
             <p class="showtest">
-                今天周五，下周一将<span>逾期</span><br/> 请您及时填报本周周报！
+                今天{{weekd}}，下周一将<span>逾期</span><br/> 请您及时填报本周周报！
             </p>
         </div>
         <div class="but_but">
@@ -15,78 +15,99 @@
   <div class="haer_bg">
       <div class="logimgs">
           <img class="log" src="@/assets/img/icon_logo.png" alt="">
-          <img class="logout" src="@/assets/img/icon_tc.png" alt="">
+          <img @click="logout()" class="logout" src="@/assets/img/icon_tc.png" alt="">
       </div>
       <div class="toux">
           <img class="usertoux" src="@/assets/img/icon_tx.png" alt="">
           <p class="xidong">
-              欢迎您，张晓东<span class="role">主管</span><a href="" class="change">修改密码</a>
+              欢迎您，{{employeeName}}<span class="role" >{{posNames}}</span><router-link  :to="{path:'/layout/password'}" class="change" >修改密码</router-link>
           </p>
       </div>
       <div class="pand">
           <div class="flexbox">
-              <span class="sp1">1</span>
+              <span class="sp1">{{delayWriteWeekCount}}</span>
               <span class="sp2">待填周报</span>
           </div>
           <div class="flexbox">
-              <span class="sp1">121</span>
+              <span class="sp1">{{replyingWeekCount}}</span>
               <span class="sp2">待批复周报</span>
           </div>
           <div class="flexbox">
-              <span class="sp1">5</span>
+              <span class="sp1">{{suggestionCount}}</span>
               <span class="sp2">匿名意见</span>
           </div>
       </div>
   </div>
     <div class="flexurlbox">
-        <li>
+        <li @click="gotoPage(1)">
             <div>
                 <img class="imga" src="@/assets/img/u_txzb.png" alt="">
             </div>
             <span>填写活动周报</span>
         </li>
-          <li>
+          <li @click="gotoPage(2)">
             <div>
                 <img class="imga" src="@/assets/img/u_wdlis.png" alt="">
             </div>
             <span>我的历史周报</span>
         </li>
-         <li>
+         <li v-if='isCheck' @click="gotoPage(3)">
             <div>
                 <img class="imga" src="@/assets/img/u_pf.png" alt="">
             </div>
             <span>批复下属周报</span>
         </li>
-          <li>
+          <li @click="gotoPage(4)">
             <div>
                 <img class="imga" src="@/assets/img/u_nm.png" alt="">
             </div>
             <span>填写匿名意见</span>
         </li>
-          <li>
+          <li @click="gotoPage(5)">
             <div>
                 <img class="imga" src="@/assets/img/u_wdls.png" alt="">
             </div>
             <span>我的历史意见</span>
         </li>
-          <li>
-            <div>
-                <img class="imgyj" src="@/assets/img/u_yj.png" alt="">
-            </div>
-            <span>大地意见广场</span>
+           
+          <li @click="gotoPage(6)">
+                <div>
+                    <img class="imgyj" src="@/assets/img/u_yj.png" alt="">
+                </div>
+                <span>大地意见广场</span>
         </li>
     </div>
 </template>
 
 <script>
 import {ref,onMounted,reactive,toRefs, getCurrentInstance} from 'vue'
+import {getWeekDay, getWeek} from '../../assets/js/util'
+import UserLogin from '../../assets/js/UserLogin';
   export default {
     name:'user',
     props:[''],
    setup(){
        const data = reactive({
-           showlayer:true
+           isCheck:false,
+           showlayer:false,
+           delayWriteWeekCount:0,
+           replyingWeekCount:0,
+           suggestionCount:0,
+           weekd:'星期五',
+           isSubmit:"",
+           isID:'',
+           employeeName:'',
+           posNames:''
        })
+       onMounted(()=>{
+        getSummary()
+        getSeeWeek()
+        getExists()
+        getWeekReport()
+        getUserInfo()
+        // ctx.$router.push('/layout/password')
+       })
+       
       const {ctx } = getCurrentInstance()
        //控制layer
        const onShowLayer = () =>{
@@ -94,12 +115,132 @@ import {ref,onMounted,reactive,toRefs, getCurrentInstance} from 'vue'
        }
        const onHideLayer = () =>{
            data.showlayer = false 
+       }
+        const getExists = () =>{
+            let weekDate = getWeekDay()
+            ctx.$HttpApi.get(`/api/WeekReview/exists/${weekDate}`).then((res)=>{
+                data.weekd = getWeek()
+                if(res.code==0){
+                    data.isSubmit = res.data
+                    if(res.data == 'Y'){
+                        data.showlayer = false
+                    }else{
+                         data.showlayer = true
+                    }
+                }
+            }).catch((err)=>{
+                
+            })
+        }
+
+       const getSummary= ()=>{
+            ctx.$HttpApi.get('/api/Employee/summary').then((res)=>{
+                const respoen = res.data
+                data.delayWriteWeekCount = respoen.delayWriteWeekCount,
+                data.replyingWeekCount= respoen.replyingWeekCount,
+                data.suggestionCount= respoen.suggestionCount
+            }).catch((err)=>{
+               
+            })
        } 
+        const getSeeWeek= ()=>{
+        ctx.$HttpApi.get('/api/Employee/seeWeek').then((res)=>{
+            if(res.data == 'N'){
+                data.isCheck = false
+                ctx.$store.state.isSeeWeek = 'N' 
+            }else{
+                data.isCheck = true
+                ctx.$store.state.isSeeWeek = 'Y' 
+            }
+        }).catch((err)=>{
+           
+        }) 
+       }
+
+        //跳转修改密码
+        const changePswd =() => {
+            ctx.$router.push('/layout/password')
+        }
+        const gotoPage =(name)=>{
+            if(name == 1){
+            //     let isStuts = ''
+            //     if(data.isSubmit == 'N'){
+            //         isStuts = 1
+            //     }else{
+            //          isStuts = 2
+            //     }
+            //     ctx.$router.currentRoute.value.query
+            //   ctx.$router.push({path:'/layout/weekfill',query:{'isStuts':isStuts}})
+             ctx.$router.push({path:'/layout/weekfill', query:{
+                isID:data.isID,
+
+             }})
+            }else if(name == 2){
+                ctx.$router.push('/layout/historyPort')
+            }else if(name == 3){
+                ctx.$router.push({name:'weekReview'})
+            }else if(name == 4){
+                ctx.$router.push('/layout/feedbackfill')
+            }else if(name == 5){
+                ctx.$router.push('/layout/myfeedback')
+            }else if(name == 6){
+                ctx.$router.push('/layout/feedback')
+            }
+         }
+      const getWeekReport = () =>{
+            let week = getWeekDay()
+            ctx.$HttpApi.get(`/api/WeekReview/${week}`).then((res)=>{
+            if(res.code == 0){
+               let addWeekReport = ctx.$store.state.addWeekReport
+               if(res.data.id){ 
+                    ctx.$store.state.isID = res.data.id
+                     ctx.$store.state.isWeekFill = res.data.status
+                } 
+               if(res.data == null){
+                addWeekReport.weekPlans = [],
+                addWeekReport.weekNextPlans = [],
+                addWeekReport.weekMend =[]
+                ctx.$store.state.isWeekFill = ""
+               }else{
+                addWeekReport.weekPlans = res.data.weekPlans?res.data.weekPlans:[],
+                addWeekReport.weekNextPlans = res.data.weekNextPlans?res.data.weekNextPlans:[],
+                addWeekReport.weekMend = res.data.weekMend?res.data.weekMend:[]
+               }
+            }
+        }).catch((err)=>{
+            
+        }) 
+
+        }
+        const getUserInfo = () =>{ 
+            ctx.$HttpApi.get(`/api/Employee/info`).then((res)=>{
+            if(res.code == 0){
+              data.employeeName = res.data.employeeName
+              if(res.data.posNames){
+                data.posNames = res.data.posNames.toString()
+              }else{
+                  data.posNames = ''
+              }
+            }
+        }).catch((err)=>{
+            
+        }) 
+
+        }
+        const logout = () =>{
+            UserLogin.removeLoginInfo()
+            ctx.$router.replace('/login')
+        }
         const refdata = toRefs(data)
        return{
            ...refdata,
            onShowLayer,
-           onHideLayer
+           onHideLayer,
+           getSummary,
+           getSeeWeek,
+           changePswd,
+           gotoPage,
+           logout
        }
    }
   }

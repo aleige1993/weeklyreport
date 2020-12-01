@@ -1,6 +1,3 @@
-/**
- * Created by MarvenGong on 2017/11/10.
- */
 class UserLogin {
     LOGININFOKEY = 'loginInfo';
     /**

@@ -1,10 +1,16 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 const routes = [{
         path: '/',
-        name: 'login',
-        redirect: '/user',
+        name: 'index',
+        redirect:'/login',
         component: () =>
-            import ('@/views/login')
+            import ('@/views/index')
+    },
+    {
+        path: '/login',
+        name: 'login',
+        component: () =>
+            import ('@/views/login/index'),
     },
     {
         path: '/user',
@@ -15,10 +21,17 @@ const routes = [{
     {
         path: '/layout',
         name: 'layout',
-        redirect: '/layout/historyPort',
         component: () =>
-            import ('@/views/index'),
-        children: [{
+            import ('@/views/weekport/index'),
+        children: [
+            {
+                path: 'password',
+                name: 'password',
+                meta: { title: '修改密码' },
+                component: () =>
+                    import ('@/views/weekport/changesPassword')
+            },
+            {
                 path: 'historyPort',
                 name: 'historyPort',
                 meta: { title: '历史周报' },
@@ -75,11 +88,32 @@ const routes = [{
                     import ('@/views/weekport/portDetail3')
             },
             {
-                path: 'password',
-                name: 'password',
-                meta: { title: '修改密码' },
+                path: 'feedback',
+                name: 'feedback',
+                meta: { title: '大地意见大厅' },
                 component: () =>
-                    import ('@/views/weekport/changesPassword')
+                    import ('@/views/weekport/feedback')
+            },
+            {
+                path: 'myfeedback',
+                name: 'myfeedback',
+                meta: { title: '我的历史意见' },
+                component: () =>
+                    import ('@/views/weekport/myFeedback')
+            },
+            {
+                path: 'feedbackfill',
+                name: 'feedbackfill',
+                meta: { title: '匿名意见 - 填写' },
+                component: () =>
+                    import ('@/views/weekport/feedbackFillin')
+            },
+            {
+                path: 'feedbackCheck',
+                name: 'feedbackCheck',
+                meta: { title: '匿名意见 - 查看' },
+                component: () =>
+                    import ('@/views/weekport/feedbackCheck')
             }
         ]
     }

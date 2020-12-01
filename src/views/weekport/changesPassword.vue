@@ -12,7 +12,7 @@
         </li>
     </div>
 
-    <van-button type="primary" round class="changebut">确定修改密码</van-button>
+    <van-button type="primary" round class="changebut" @click="submit">确定修改密码</van-button>
 </div>
 </template>
 
@@ -24,7 +24,7 @@ import {
     getCurrentInstance
 } from 'vue'
 export default {
-    name: 'changesPassword',
+    name: 'password',
     props: [''],
     setup() {
         const data = reactive({
@@ -36,13 +36,53 @@ export default {
             ctx
         } = getCurrentInstance()
         onMounted(() => {
-            ctx.$notify({
-                message: '您输入的原始密码不正确，请重新输入',
-                type: 'warning',
-            })
+            // ctx.$notify({
+            //     message: '您输入的原始密码不正确，请重新输入',
+            //     type: 'warning',
+            // })
         })
+        const submit = () =>{
+            if(data.paswd1 == ''){
+                ctx.$notify({
+                    message: '请输入原始密码',
+                    type: 'warning',
+                })
+            }else if(data.paswd2 == ''){
+                 ctx.$notify({
+                    message: '请输入更新密码',
+                    type: 'warning',
+                })
+            }else if(data.paswd3 !== data.paswd2){
+                 ctx.$notify({
+                    message: '与更新密码不一致',
+                    type: 'warning',
+                })
+            }
+            ctx.$HttpApi.post('/api/Employee/changepwd',{
+                oldPassword: data.paswd1,
+                newPassword: data.paswd2,
+                againPassword:data.paswd3
+            }).then((res)=>{
+                let rescodes =  res.data
+                 ctx.$toast.success('修改成功!'); 
+                if(rescodes.code){
+                    ctx.$toast.success('修改成功!'); 
+                    setTimeout(()=>{
+                        ctx.$router.push('/login')
+                    },1500)
+                }else{
+                    ctx.$notify({
+                        message: res.message,
+                        type: 'warning',
+                    })
+                }
+            }).catch((err)=>{
+                console.log(err)
+            })
+        }
         return {
-            ...toRefs(data)
+            ...toRefs(data),
+            submit
         }
     }
 

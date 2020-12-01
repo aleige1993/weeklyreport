@@ -29,6 +29,13 @@ export default {
 }
 </script>
 
-<style lang="css" scoped>
-
+<style lang="css">
+ .nodata{
+    width:100%;
+    margin-top:20%;
+    text-align: center;
+    font-size: 24px;
+    color:#999;
+    background-color: #EDEDF0;
+  }
 </style>

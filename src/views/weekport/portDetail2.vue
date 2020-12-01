@@ -1,13 +1,15 @@
 <template>
     <div class="scroll_views">
          <div class="one boxfill">
-          <div class="zongjie">
-              <span class="color1 tiltes" >问题1</span>
+          <div class="zongjie"> 
+              <span class="color1 tiltes" v-if="index == '-1'">问题</span>
+              <span class="color1 tiltes" v-else>问题{{num}}</span>
           </div>
-          <div class="text_aere" :class='message ? "":"text_aere_img"'>
+          <div class="text_aere" :class='content ? "":"text_aere_img"'>
              <van-field
+                :readonly="isCheck"
                 class="input_file"
-                v-model="message"
+                v-model="content"
                 rows="1"
                 autosize 
                 type="textarea"
@@ -19,10 +21,11 @@
           <div class="zongjie">
               <span class="color2 tiltes" >改进措施</span>
           </div>
-           <div class="text_aere" :class='message ? "":"text_aere_img"'>
+           <div class="text_aere" :class='mend ? "":"text_aere_img"'>
              <van-field
+                :readonly="isCheck"
                 class="input_file"
-                v-model="message"
+                v-model="mend"
                 rows="1"
                 autosize 
                 type="textarea"
@@ -31,9 +34,9 @@
           </div>
       </div> 
     </div>
-    <div class="but_box">
-        <van-button class="but_action" round type="primary" color="#C0AB7D">删除问题</van-button>
-        <van-button  class="but_action" round type="primary" color="#005C8D">保存更新</van-button>
+    <div class="but_box" v-if="!isCheck">
+        <van-button class="but_action" round type="primary" color="#C0AB7D" @click="delpanls">删除问题</van-button>
+        <van-button  class="but_action" round type="primary" color="#005C8D" @click="addplans">{{index == '-1' ?'添加问题':'修改问题'}}</van-button>
     </div>
      
 </template>
@@ -43,18 +46,80 @@ import {ref,onMounted,reactive,toRefs, getCurrentInstance} from 'vue'
   export default {
     name:'portDetail2',
     props:[''],
-   setup(){
+  setup(){
        const data = reactive({
-           showIcon:false,
-           message:''
+           content:'',
+           mend:'',
+           index:'-1',
+           num:0,
+           isCheck:false
        })
+       const {ctx} = getCurrentInstance()
+        onMounted(()=>{
+            if(ctx.$router.currentRoute.value.params.index !== ''){
+                let params = ctx.$router.currentRoute.value.params
+                data.content = params.content
+                data.mend = params.mend
+                data.index = params.index
+                data.isCheck = params.isCheck?JSON.parse(params.isCheck):params.isCheck
+                data.num = parseInt(data.index)+1
+                 if(params.isCheck == true){
+                     ctx.$store.commit('setHead',[4,'存在问题 - 查看',''])
+                }
+            }else{
+
+            }
+        })
+        const addplans = ()=>{
+            if(data.content == ''){
+                 ctx.$notify({
+                    message: '问题不能为空',
+                    type: 'warning',
+                })
+                return false
+            }else if(data.mend  == ''){
+                 ctx.$notify({
+                    message: '改进措施不能为空',
+                    type: 'warning',
+                })
+                return false
+            }
+            const addWeekReport = ctx.$store.state.addWeekReport
+            console.log('addWeekReport', addWeekReport.weekMend)
+            if(data.index == '-1'){
+                addWeekReport.weekMend.push({
+                    'content':data.content,
+                    'mend':data.mend,
+                })
+                ctx.$toast.success('添加成功');
+            }else{
+                addWeekReport.weekMend[data.index] = {
+                    'content':data.content,
+                    'mend':data.mend
+                }
+                ctx.$toast.success('修改成功');
+            } 
+            setTimeout(()=>{
+            ctx.$router.push('/layout/weekfill')
+            },2000)
+             ctx.$store.commit('changeUpdate', true)
+        }
+        const delpanls = () =>{
+            if( data.index == '-1'){
+            }else{
+                ctx.$store.commit('delPanl2', data.index)
+                 ctx.$toast.success('删除成功');
+                 ctx.$store.commit('changeUpdate', true)
+                  setTimeout(()=>{
+            ctx.$router.push('/layout/weekfill')
+            },2000)
+            }
+        }
         const refdata = toRefs(data)
-        const {ctx} = getCurrentInstance()
-        // onMounted(()=>{
-        //      ctx.$store.commit('setHead',[1,'123213','asdasfdfa']) 
-        // })
        return{
-           ...refdata
+           ...refdata,
+           addplans,
+           delpanls
        }
    }
   }

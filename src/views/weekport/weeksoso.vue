@@ -4,14 +4,31 @@
                 <span class="sotext" @click="onSearch">搜索</span>
             </div>
           <div class="history"> 
-         <li>
+         <!-- <li>
             <div class="titles">111112020 ( 04.25-04.30 )</div>
             <div class="rihtdiv">
                 <div class="mv_colors1 gdcss">待上报</div>
                 <img src="@/assets/img/right_jt.png">
             </div>
+        </li> -->
+        <div class="nodata" v-if="islist">
+            无数据，试试其他人~
+            </div>
+        <li
+          v-for="(item, index) in list"
+          :key="index"
+          @click="gotoDateils(item)"
+        >
+          <div class="titles">{{item.employeeName  }}   {{ dateChanges(item.weekDate) }}</div>
+          <div class="rihtdiv">
+           <div class="mv_colors1 gdcss" v-if="item.status == '待批复'">{{item.status}}</div>
+                 <div class="mv_colors5 gdcss" v-if="item.status == '已延迟'">{{item.status}}</div>
+                   <div class="mv_colors4 gdcss" v-if="item.status == '已逾期'">{{item.status}}</div>
+                    <div class="mv_colors3 gdcss" v-if="item.status == '已批复'">{{item.status}}</div>
+            <img src="@/assets/img/right_jt.png" />
+          </div>
         </li>
-        <li>
+        <!-- <li>
             <div class="titles">2020 ( 04.25-04.30 )</div>
             <div class="rihtdiv">
                 <div class="mv_colors2 gdcss">已上报</div>
@@ -38,7 +55,7 @@
                 <div class="mv_colors5 gdcss">已延迟</div>
                 <img src="@/assets/img/right_jt.png">
             </div>
-        </li>
+        </li> -->
           </div>
             <!-- <van-cell v-for="item in list" :key="item" :title="item" /> -->
        
@@ -46,6 +63,7 @@
 
 <script>
 import {ref,onMounted,reactive,toRefs, getCurrentInstance} from 'vue'
+import {getWeekDay, getWeek,getNewData} from '../../assets/js/util'
   export default {
     name:'soso',
     props:[''],
@@ -55,41 +73,104 @@ import {ref,onMounted,reactive,toRefs, getCurrentInstance} from 'vue'
            refreshing:false,
            loading:false,
            finished:false,
-           sosoval:''
+           sosoval:'',
+           islist:false
 
        })
-       const onRefresh = ()=>{
-            data.finished = false; 
-            data.loading = true;
-            onLoad();
-       }
-        const onLoad = ()=>{
-           setTimeout(() => {
-                if (data.refreshing) {
-                data.list = [];
-                data.refreshing = false;
-                }
+       const { ctx } = getCurrentInstance();
+       const gotoDateils = (item) => {
+      ctx.$router.push({
+        path: "/layout/weekCheck",
+        query: {
+           id:item.weekID,
+             name:item.employeeName,
+             isLeader:1,
+             empStatus:item.status,
+             empWeekDate:item.weekDate 
+        },
+      });
+    };
+    const onSearch = () => {
+      ctx.$HttpApi
+        .post("/api/WeekReview/leader/list",{
+          page:1,
+          pageSize:10000,
+          query:{
+            employeeName:data.sosoval
+          }
+        })
+        .then((res) => {
+          let rescodes = res.data;
+          if (rescodes.code == 0) {
+            data.list = rescodes.data;
+            if(rescodes.data.length>0){
+              data.islist = false
+            }else{
+               data.islist =true
+            }
+          } else {
+            ctx.$notify({
+              message: rescodes.message,
+              type: "warning",
+            });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+    //    const onRefresh = ()=>{
+    //         data.finished = false; 
+    //         data.loading = true;
+    //         onLoad();
+    //    }
+    //     const onLoad = ()=>{
+    //        setTimeout(() => {
+    //             if (data.refreshing) {
+    //             data.list = [];
+    //             data.refreshing = false;
+    //             }
 
-                for (let i = 0; i < 10; i++) {
-                data.list.push(data.list.length + 1);
-                }
-                data.loading = false;
+    //             for (let i = 0; i < 10; i++) {
+    //             data.list.push(data.list.length + 1);
+    //             }
+    //             data.loading = false;
 
-                if (data.list.length >= 40) {
-                     data.finished = true;
-                }
-                data.loading = false
-            }, 1000);
-       }
-       const onSearch = ()=>{
-        console.log(data.sosoval)
-       }
+    //             if (data.list.length >= 40) {
+    //                  data.finished = true;
+    //             }
+    //             data.loading = false
+    //         }, 1000);
+    //    }
+    //    const onSearch = ()=>{
+    //     console.log(data.sosoval)
+    //    }
+      const fromTime = (val) => {
+      if (val) {
+        return val.slice(0, 10);
+      } else {
+        return val;
+      }
+    };
+         const dateChanges = (val) =>{
+            if(val){
+            let week = val.slice(0,10)
+            let weekend = getNewData(week, 6)
+            return `${week} 至 ${weekend}`
+
+            }else{
+                return val
+            }
+        }
        const refdata = toRefs(data)
        return{
            ...refdata,
-           onLoad,
-           onRefresh,
-           onSearch
+        //    onLoad,
+        //    onRefresh,
+           onSearch,
+           gotoDateils,
+           fromTime,
+           dateChanges
        }
    }
   }

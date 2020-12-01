@@ -1,15 +1,16 @@
 <template>
-    
-    <div> 
+    <Headers/>
+    <main class="magin_main"> 
         <router-view/>
-    </div>
+    </main>
     <!-- <footer>
       footer
     </footer> -->
 </template>
 
 <script>
- 
+
+import Headers from '../../components/headers'
   export default {
     name:'',
     props:[''],
@@ -19,7 +20,7 @@
       };
     },
 
-    components: {},
+    components: {Headers},
 
     computed: {},
 
@@ -34,16 +35,9 @@
   }
 
 </script>
-<style lang='css' >
+<style lang='css'>
   .magin_main{
     width: 100%;
     padding:120px 20px 30px 20px;
-  }
-  .nodata{
-    width:100%;
-    margin-top:30%;
-    text-align: center;
-    font-size: 24px;
-    color:#ddd;
   }
 </style>

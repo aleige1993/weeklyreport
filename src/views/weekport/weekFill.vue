@@ -1,23 +1,30 @@
 <template> 
+    <div class="headers">
+      <div class="leftcss" @click="onGoBack">
+         <img src="@/assets/img/left_jt.png" alt="">
+      </div>
+      <div class="content" >填写周报</div> 
+  </div>
+
     <div class="scroll_view">
-        <p class="time_p">周报时间：2020 04.23-04.29</p>    
+        <p class="time_p">周报时间： {{weekstart}}至{{weekend}}</p>    
         <div class="zhoubaofill">
             <div class="hede">
                 <div class="hd_l">
                     <img  class="tu1" src="@/assets/img/icon_rq.png" alt="">
                     <span>本周工作总结</span><sup>*</sup>
                 </div>
-                <div class="hd_r">
-                    <!-- <img class="tu2" src="@/assets/img/icon_add.png" alt=""> -->
-                    <img class="tu2" src="@/assets/img/icon_add_dis.png" alt="">
+                <div class="hd_r" v-if="isWeekFill != true" @click="addpanl(1)">
+                    <img v-if="isStuts == 1" class="tu2" src="@/assets/img/icon_add.png" alt="">
+                    <img v-else class="tu2" src="@/assets/img/icon_add_dis.png" alt="">
                 </div>
             </div>
             <div class="conter_text">
                  <!-- <p class="addtext">已逾期</p> -->
                 <!-- <p class="addtext">请在右侧添加内容</p> -->
-                    <li class="listQA">
-                        <span class="num">1</span>
-                        <span class="tilts van-ellipsis">对承保业务及时地进行审核务及务及时地进行务及时地进行务及时地进行时地进行审核，利用风险.....</span>
+                    <li class="listQA" v-for="(item,index) in weekPlans1" :key="index" @click="addpanl(1,item,index)">
+                        <span class="num">{{index+1}}</span>
+                        <span class="tilts van-ellipsis">{{item.content}}</span>
                         <img  src="@/assets/img/right_jt.png" alt="">
                     </li> 
             </div>
@@ -28,16 +35,16 @@
                     <img  class="tu3" src="@/assets/img/icon_bd.png" alt="">
                     <span>存在问题及改进措施</span><sup>*</sup>
                 </div>
-                <div class="hd_r">
-                    <img class="tu2" src="@/assets/img/icon_add.png" alt="">
-                     <!-- <img class="tu2" src="@/assets/img/icon_add_dis.png" alt=""> -->
+                <div class="hd_r" v-if="isWeekFill != true" @click="addpanl(2)">
+                    <img  v-if="isStuts == 1" class="tu2" src="@/assets/img/icon_add.png" alt="">
+                     <img v-else class="tu2" src="@/assets/img/icon_add_dis.png" alt="">
                 </div>
             </div>
             <div class="conter_text">
                 <!-- <p class="addtext">请在右侧添加内容</p> -->
-                  <li class="listQA">
-                        <span class="wt_num">问题1</span>
-                        <span class="tilts van-ellipsis">对承保业务及时地进行审核务及务及时地进行务及时地进行务及时地进行时地进行审核，利用风险.....</span>
+                  <li class="listQA"  v-for="(item,index) in weekMend1" :key="index" @click="addpanl(2,item,index)">
+                        <span class="wt_num">问题{{index+1}}</span>
+                        <span class="tilts van-ellipsis">{{item.content}}</span>
                         <img  src="@/assets/img/right_jt.png" alt="">
                     </li>
             </div>
@@ -48,40 +55,200 @@
                     <img  class="tu1" src="@/assets/img/icon_sj.png" alt="">
                     <span>下周工作计划</span><sup>*</sup>
                 </div>
-                <div class="hd_r">
-                    <img class="tu2" src="@/assets/img/icon_add.png" alt="">
-                     <!-- <img class="tu2" src="@/assets/img/icon_add_dis.png" alt=""> -->
+                <div class="hd_r" v-if="isWeekFill != true" @click="addpanl(3)">
+                    <img v-if="isStuts == 1" class="tu2" src="@/assets/img/icon_add.png" alt="">
+                     <img v-else class="tu2" src="@/assets/img/icon_add_dis.png" alt="">
                 </div>
             </div>
             <div class="conter_text">
                 <!-- <p class="addtext">请在右侧添加内容</p> -->
-                  <li class="listQA">
-                        <span class="num">1</span>
-                        <span class="tilts van-ellipsis">对承保业务及时地进行审核务及务及时地进行务及时地进行务及时地进行时地进行审核，利用风险.....</span>
+                  <li class="listQA"  v-for="(item,index) in weekNextPlans1" :key="index" @click="addpanl(3,item,index)">
+                        <span class="num">{{index+1}}</span>
+                        <span class="tilts van-ellipsis">{{item}}</span>
                         <img  src="@/assets/img/right_jt.png" alt="">
                     </li>
             </div>
         </div> 
       
     </div>  
-    <div class="gubottom">
-        <van-button class="zdbutton" round type="primary" color='#005C8D'>提交周报</van-button>
-        <!-- <van-button class="zdbutton" round type="primary" color='#C2C2C2'>提交周报</van-button> -->
+    <!-- <div class="gubottom">
+        <van-button class="zdbutton" round type="primary" color='#005C8D'>提交周报</van-button> 
+    </div> -->
+     <div class="but_box" v-if="!isWeekFill">
+         <!-- isUpdate -->
+         <van-badge class="updatacase" :dot="isUpdate">
+            <van-button class="but_action" round type="primary" color="#C0AB7D" @click="savePanl(0)">保存周报</van-button>
+        </van-badge>
+        <van-badge class="updatacase" >
+            <van-button  class="but_action" round type="primary" color="#005C8D" @click="savePanl(1)">提交周报</van-button>
+        </van-badge>
+        
     </div>
 </template>
 
 <script>
-import {ref,onMounted,reactive,toRefs, getCurrentInstance} from 'vue'
+import {ref,onMounted,reactive,toRefs,computed, getCurrentInstance} from 'vue'
+import {getWeekDay, getWeek,getNewData} from '../../assets/js/util'
   export default {
     name:'weekfill',
     props:[''],
    setup(){
-       const {ctx} = getCurrentInstance()
-       onMounted(()=>{
-           ctx.$store.commit('setHead',[4,'填写周报 - ','已逾期'])
+       const data = reactive({
+         isStuts:1,
+         weekPlans:[],
+         weekNextPlans:[],
+         weekMend:[],
+        weekstart:'',
+        weekend:'',
+        isUpdate:false,
+        isCheck:false
        })
+       const {ctx} = getCurrentInstance()
+       let weekPlans1 = computed(()=>{
+           return ctx.$store.state.addWeekReport.weekPlans
+       })
+        let weekNextPlans1 = computed(()=>{
+           return ctx.$store.state.addWeekReport.weekNextPlans
+       })
+        let weekMend1 = computed(()=>{
+            
+           return ctx.$store.state.addWeekReport.weekMend
+       })
+       let isUpdate = computed(()=>{
+           return ctx.$store.state.isUpdate
+       })
+        let isWeekFill = computed(()=>{
+            if(ctx.$store.state.isWeekFill == 'Submited'){
+                data.isCheck = true
+                return true
+            }else{
+                data.isCheck = false
+                return false
+            }
+       })
+
+       onMounted(()=>{ 
+        //    if(data.isStuts == 1){
+        //     ctx.$store.commit('setHead',[4,'填写周报',''])
+        //    }else if(data.isStuts == 2){
+        //     ctx.$store.commit('setHead',[3,'填写周报 - ','已延迟'])
+        //    }else if(data.isStuts == 3){
+        //     ctx.$store.commit('setHead',[2,'查看周报 - ',''])
+        //    }
+        console.log(ctx.$store.state.isWeekFill)
+           let week = getWeekDay()
+           let weekend = getNewData(week, 6)
+            data.weekstart = week
+            data.weekend = weekend
+       
+            
+       })
+        const addpanl = (num,item,index = '') =>{
+            if(num == 1){
+                ctx.$router.push({
+                name: 'portDetail',
+                params: {
+                    content:item? item.content:'',
+                    action:item?item.action:'',
+                    result:item?item.result:'',
+                    index:index,
+                    isCheck:data.isCheck
+                }
+                }) 
+            }else if(num == 2){ 
+                ctx.$router.push({
+                    name:'portDetail2',
+                    params: {
+                        content:item? item.content:'',
+                        mend:item?item.mend:'',
+                        index:index,
+                         isCheck:data.isCheck
+                    }
+                 })
+            }else if(num == 3){
+                ctx.$router.push({
+                    name:'portDetail3',
+                    params: {
+                        content:item? item:'',
+                        index:index,
+                        isCheck:data.isCheck
+                    }
+                 })
+            }
+        }
+        const savePanl = (val) =>{
+            let addWeekReport =  ctx.$store.state.addWeekReport 
+            if(addWeekReport.weekPlans.length == 0){
+                 ctx.$notify({
+                    message: '本周工作总结不能为空',
+                    type: 'warning',
+                })
+                return false
+            }else if(addWeekReport.weekNextPlans.length == 0){
+                ctx.$notify({
+                    message: '下周工作计划不能为空',
+                    type: 'warning',
+                })
+                return false
+            }else if(addWeekReport.weekMend.length == 0){
+                ctx.$notify({
+                    message: '存在问题及改进措施不能为空',
+                    type: 'warning',
+                })
+                return false
+            } 
+                let parms = {
+                "weekDate":  data.weekstart,
+                "status": val,
+                "weekPlans":addWeekReport.weekPlans,
+                "weekNextPlans": addWeekReport.weekNextPlans,
+                "weekMend": addWeekReport.weekMend
+               } 
+                if(ctx.$store.state.isID){
+                   parms.id = ctx.$store.state.isID
+                }
+             ctx.$HttpApi.post('/api/WeekReview/save', parms).then((res)=>{
+                let rescodes =  res.data 
+                if(rescodes.code == 0){
+                    let str = val == 1?'提交成功':'保存成功'
+                    ctx.$toast.success(str);
+                    ctx.$store.state.isID = ''
+                     ctx.$store.state.isUpdate = false
+                    if(val != 0){
+                        setTimeout(()=>{
+                            ctx.$router.push('/user')
+                        },1500)
+                    }
+                    if(val == 1){
+                        addWeekReport.weekPlans = [],
+                        addWeekReport.weekNextPlans = [],
+                        addWeekReport.weekMend =[]
+                    }
+                   
+                }else{
+                    ctx.$notify({
+                        message: rescodes.message,
+                        type: 'warning',
+                    })
+                }
+            }).catch((err)=>{
+                console.log(err)
+            }) 
+        }
+         const onGoBack = () =>{
+            ctx.$store.state.isUpdate = false
+            ctx.$router.replace({path: '/user'})
+            }
        return{
-           
+           ...toRefs(data),
+           addpanl,
+           weekPlans1,
+           weekNextPlans1,
+           weekMend1,
+           savePanl,
+           isUpdate,
+           isWeekFill,
+           onGoBack
        }
    }
   }
@@ -138,6 +305,9 @@ import {ref,onMounted,reactive,toRefs, getCurrentInstance} from 'vue'
     }
     .hd_l sup{
         color: red;
+    }
+    .conter_text{
+        min-height:60px;
     }
     .conter_text .addtext{
         color: #999;
@@ -198,4 +368,24 @@ import {ref,onMounted,reactive,toRefs, getCurrentInstance} from 'vue'
     .scroll_view{
         padding-bottom:120px;
     }
+    .but_box{
+    display: flex;
+    justify-content: space-between;
+    position: fixed;
+    bottom: 60px;
+    left: 3%;
+    width: 94%;
+    z-index: 2;
+}
+.but_action{
+    width: 96%;
+    height: 70px;
+}
+.updatacase{
+    width: 50%;
+    text-align: center;
+}
+.headers{
+    z-index: 10;
+}
 </style>

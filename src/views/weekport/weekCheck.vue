@@ -1,14 +1,21 @@
 <template>
     <van-overlay :show="showlayer" @click="onHideLayer" z-index='5' />
     <div class="review_box" v-if="boxIput">
-        <div class="had">
+        <div class="had" v-if="isStatus == 'Replyed'"> 
             <span class="title">批复意见</span>
-            <span class="name">批复人：张三</span>        
+            <span class="name">{{`批复人：${replyName}`}}</span>        
+        </div>
+         <div class="had" v-else> 
+            <span class="title">{{isLeader == 1?'批复意见填写':'批复意见'}}</span>
+            <span class="name">{{isLeader == 1? `周报提交人：${userName}`:`批复人：${replyName}`}}</span>        
         </div>
         <div class="box_iput">
-            <textarea class="box_text" v-model="textarea" cols="30" rows="10" placeholder="请输入周报批复意见"></textarea>
+            <textarea :disabled="ischanges" class="box_text" v-model="replyContent" cols="30" rows="10" placeholder="请输入周报批复意见"></textarea>
         </div>
-        <div class="box_foot" @click='onBoxComf'>
+         <div v-if="ischanges" class="box_foot" @click='onHideLayer'>
+            关闭
+        </div>
+        <div v-else class="box_foot" @click='onBoxComf'>
             提交
         </div>
     </div>
@@ -16,21 +23,32 @@
         <div class="icon_text">
             <img src="@/assets/img/icon_gt.png" alt="">
             <p class="showtest">
-                提交周报后将<span>无法修改</span>，<br/> 请您确认检查无误并提交？
+                提交批复后将<span>无法修改</span>，<br/> 请您确认检查无误并提交？
             </p>
         </div>
         <div class="but_but">
             <div @click="onHideLayer">取消</div>
-            <div class="confirmbut">确定</div>
+            <div class="confirmbut" @click="setReply">确定</div>
         </div>
     </div>
 
     <div class="scroll_view">
-        <div class="fixed_review" @click="onShowLayer">
+         <!-- isLeader:1,  data.isReply  replyContent-->
+        <div class="fixed_review" v-if="isLeader == 0 && replyContent != null" @click="onShowLayer('redy')" >
             <img src="@/assets/img/icon_yj.png" alt="">
-            <span>批复意见</span>
+            <span>查看意见1</span>
         </div>
-        <p class="time_p">周报时间：2020 04.23-04.29</p>    
+        <div class="fixed_review" v-if="isLeader == 1 && replyContent !== null && isReply =='N'" @click="onShowLayer('redy')" >
+            <img src="@/assets/img/icon_yj.png" alt="">
+           
+            <span>查看意见2</span>
+        </div>
+         <div class="fixed_review" v-if="isLeader == 1 && isReply !='N' " @click="onShowLayer('changes')" >
+            <img src="@/assets/img/icon_yj.png" alt="">
+            <span>批复意见3</span>
+        </div>
+ 
+         <p class="time_p">周报时间： {{weekstart}}至{{weekend}}</p>    
         <div class="zhoubaofill">
             <div class="hede">
                 <div class="hd_l">
@@ -39,11 +57,11 @@
                 </div>
             </div>
             <div class="conter_text">
-                 <!-- <p class="addtext">已逾期</p> -->
+                 <p v-if="empStatus=='已逾期'" class="addtext">已逾期</p>
                 <!-- <p class="addtext">请在右侧添加内容</p> -->
-                    <li class="listQA">
-                        <span class="num">1</span>
-                        <span class="tilts van-ellipsis">对承保业务及时地进行审核务及务及时地进行务及时地进行务及时地进行时地进行审核，利用风险.....</span>
+                    <li class="listQA" v-for="(item,index) in weekPlans" :key="index" @click="addpanl(1,item,index)">
+                        <span class="num">{{index+1}}</span>
+                        <span class="tilts van-ellipsis">{{item.content}}</span>
                         <img  src="@/assets/img/right_jt.png" alt="">
                     </li> 
             </div>
@@ -53,13 +71,14 @@
                 <div class="hd_l">
                     <img  class="tu3" src="@/assets/img/icon_bd.png" alt="">
                     <span>存在问题及改进措施</span><sup>*</sup>
-                </div> 
+                </div>
             </div>
             <div class="conter_text">
                 <!-- <p class="addtext">请在右侧添加内容</p> -->
-                  <li class="listQA">
-                        <span class="wt_num">问题1</span>
-                        <span class="tilts van-ellipsis">对承保业务及时地进行审核务及务及时地进行务及时地进行务及时地进行时地进行审核，利用风险.....</span>
+                 <p v-if="empStatus=='已逾期'" class="addtext">已逾期</p>
+                  <li class="listQA"  v-for="(item,index) in weekMend" :key="index" @click="addpanl(2,item,index)">
+                        <span class="wt_num">问题{{index+1}}</span>
+                        <span class="tilts van-ellipsis">{{item.content}}</span>
                         <img  src="@/assets/img/right_jt.png" alt="">
                     </li>
             </div>
@@ -73,9 +92,10 @@
             </div>
             <div class="conter_text">
                 <!-- <p class="addtext">请在右侧添加内容</p> -->
-                  <li class="listQA">
-                        <span class="num">1</span>
-                        <span class="tilts van-ellipsis">对承保业务及时地进行审核务及务及时地进行务及时地进行务及时地进行时地进行审核，利用风险.....</span>
+                 <p v-if="empStatus=='已逾期'" class="addtext">已逾期</p>
+                  <li class="listQA"  v-for="(item,index) in weekNextPlans" :key="index" @click="addpanl(3,item,index)">
+                        <span class="num">{{index+1}}</span>
+                        <span class="tilts van-ellipsis">{{item}}</span>
                         <img  src="@/assets/img/right_jt.png" alt="">
                     </li>
             </div>
@@ -86,6 +106,7 @@
 
 <script>
 import {ref,onMounted,reactive,toRefs, getCurrentInstance} from 'vue'
+import {getWeekDay, getWeek,getNewData,fromTime} from '../../assets/js/util'
   export default {
     name:'weekCheck',
     props:[''],
@@ -94,11 +115,38 @@ import {ref,onMounted,reactive,toRefs, getCurrentInstance} from 'vue'
            showlayer:false,
            boxComf:false,
            boxIput:false,
-           textarea:''
+           textarea:'',
+           query:'',
+           id:'',
+           weekstart:'',
+           weekend:'',
+           isSeeWeek:false,
+           isLeader:1,
+           isReivew:false,
+           userName:'',
+           isBut:false,
+           isCheck:'',
+           isReply:'',
+           weekDate:'',
+           replyName:'',
+           replyContent:null,
+           isStatus:'',
+           weekMend:[],
+           weekNextPlans:[],
+           weekPlans:[],
+           ischanges:false,
+           empStatus:'',
+           empWeekDate:''
+
        })
       const {ctx } = getCurrentInstance()
        //控制layer
-       const onShowLayer = () =>{
+       const onShowLayer = (val) =>{
+           if(val=='redy'){
+               data.ischanges = true
+           }else if(val == 'changes'){
+               data.ischanges = false
+           }
            data.showlayer = true 
            data.boxIput = true
        }
@@ -112,14 +160,158 @@ import {ref,onMounted,reactive,toRefs, getCurrentInstance} from 'vue'
             data.boxIput = false
         }
         onMounted(()=>{
-            ctx.$store.commit('setHead',[2,'查看周报 - ','张三']) 
+            //id-查询id name-查看谁 isLeader-是否领导查看 isReview是否有权限批复
+            if(ctx.$router.currentRoute.value.query.id !== ''){
+                let query = ctx.$router.currentRoute.value.query
+                data.isLeader = query.isLeader
+                data.id = query.id
+                data.userName = query.name
+                data.empStatus = query.empStatus
+                data.empWeekDate = query.empWeekDate
+                if(data.empStatus == '已逾期'){
+                    chagedata(data.empWeekDate)
+                    setTimeout(()=>{
+                    ctx.$store.commit('setHead',[4,'查看周报 - ','已逾期']) 
+                    
+                    },1000)
+                }
+                if( data.isLeader == 1){
+                    ctx.$store.commit('setHead',[2,'查看周报 - ',data.userName]) 
+                }else{
+                     ctx.$store.commit('setHead',[2,'查看周报','']) 
+                }
+            }
+            getCheckweek()
+            getSeeWeek()
+            //     data.query = ctx.$router.currentRoute.value.query
+            // if(ctx.$store.state.isSeeWeek == 'N'){
+            //     data.isSeeWeek =  false
+            //     ctx.$store.commit('setHead',[2,'查看周报',''])
+            // }else{
+            //     data.isSeeWeek =  true
+            //     ctx.$store.commit('setHead',[2,'查看周报', data.query.name])
+            // }
+            // ctx.$store.commit('setHead',[2,'查看周报','']) 
+            // ctx.$store.commit('setHead',[2,'查看周报 - ','张三']) 
         })
+        //审批权限
+        const getSeeWeek= ()=>{
+        ctx.$HttpApi.get('/api/Employee/seeWeek').then((res)=>{
+            if(res.data == 'N'){
+                data.isCheck = false
+                ctx.$store.state.isSeeWeek = 'N' 
+            }else{
+                data.isCheck = true
+                ctx.$store.state.isSeeWeek = 'Y' 
+            }
+        }).catch((err)=>{
+            console.log(err)
+        }) 
+       }
+        //查看周报
+        const getCheckweek= () =>{
+             ctx.$HttpApi.get(`/api/WeekReview/leader/${data.id}`).then((res)=>{
+                 if(res.code == 0){
+                      let detail = res.data.detail
+                     if(detail){
+                        data.isReply =  res.data.isReply,
+                        data.weekDate= detail.weekDate,
+                        data.replyName= detail.replyName ,
+                        data.replyContent= detail.replyContent,
+                        data.isStatus= detail.status,
+                        data.weekMend= detail.weekMend,
+                        data.weekNextPlans= detail.weekNextPlans,
+                        data.weekPlans= detail.weekPlans 
+                       let week =  fromTime(detail.weekDate)
+                        let weekend = getNewData(week, 6)
+                        data.weekstart = week
+                        data.weekend = weekend
+                     }else{
+                         console.log(1111111)
+                          data.replyContent = null
+                           data.isReply =  res.data.isReply
+                     }
+                    //  if(data.isLeader == 1){ 
+                    //  }else{
+
+                    //  }
+                    //  console.log(res)
+                 }
+                 
+            }).catch((err)=>{
+                console.log(err)
+            }) 
+        }
+        const setReply = () =>{
+             ctx.$HttpApi.post('/api/WeekReview/leader/reply',{
+               id:data.id,
+               replyContent:data.replyContent
+            }).then((res)=>{
+                let rescodes =  res.data 
+                if(rescodes.code){
+                    ctx.$toast.success('提交成功'); 
+                    data.replyContent = null
+                    setTimeout(()=>{
+                        ctx.$router.go(-1)
+                    },1500)
+                }else{
+                    ctx.$notify({
+                        message: res.message,
+                        type: 'warning',
+                    })
+                }
+            }).catch((err)=>{
+                console.log(err)
+            })
+        }
+        const addpanl = (num,item,index = '') =>{ 
+            if(num == 1){
+                ctx.$router.push({
+                name: 'portDetail',
+                params: {
+                    content:item? item.content:'',
+                    action:item?item.action:'',
+                    result:item?item.result:'',
+                    index:index,
+                    isCheck:true
+                }
+                }) 
+            }else if(num == 2){ 
+                ctx.$router.push({
+                    name:'portDetail2',
+                    params: {
+                        content:item? item.content:'',
+                        mend:item?item.mend:'',
+                        index:index,
+                         isCheck:true
+                    }
+                 })
+            }else if(num == 3){
+                ctx.$router.push({
+                    name:'portDetail3',
+                    params: {
+                        content:item? item:'',
+                        index:index,
+                         isCheck:true
+                    }
+                 })
+            }
+        }
+        const chagedata = (weekDate)=>{
+            let week =  fromTime(weekDate)
+            let weekend = getNewData(week, 6)
+            data.weekstart = week
+            data.weekend = weekend
+        }
         const refdata = toRefs(data)
        return{
            ...refdata,
            onShowLayer,
            onHideLayer,
-           onBoxComf
+           onBoxComf,
+           setReply,
+           addpanl,
+           chagedata
        }
    }
   }
@@ -263,6 +455,9 @@ import {ref,onMounted,reactive,toRefs, getCurrentInstance} from 'vue'
     }
     .hd_l sup{
         color: red;
+    }
+      .conter_text{
+        min-height:60px;
     }
     .conter_text .addtext{
         color: #999;
