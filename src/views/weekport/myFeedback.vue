@@ -46,7 +46,7 @@ export default {
       page:1,
       pageSize:20
     });
-    const { ctx } = getCurrentInstance();
+    const { ctx, proxy } = getCurrentInstance();
     onMounted(() => {
     //   getfeedback();
     });
@@ -101,7 +101,7 @@ export default {
         data.refreshing = false;
       }
 
-      ctx.$HttpApi
+      proxy.$HttpApi
         .post("/api/Suggestion/list", {
           page: data.page,
           pageSize: data.pageSize,

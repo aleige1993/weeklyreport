@@ -24,17 +24,17 @@
         tel:'',
         password:''
       })
-    const {ctx} = getCurrentInstance()
+    const {ctx , proxy } = getCurrentInstance()
     const subLogin = () =>{
-      ctx.$HttpApi.post('/api/Employee/login',{
+      proxy.$HttpApi.post('/api/Employee/login',{
         userName:data.tel,
         userPwd:data.password
       }).then((res)=>{
         if(res.headers.token){
-          ctx.$UserLogin.setLoginInfo(res.headers.token)
+          proxy.$UserLogin.setLoginInfo(res.headers.token)
           ctx.$router.push({path:'/user'})
         }else{
-          if(ctx.$UserLogin.getLoginToken()){
+          if(proxy.$UserLogin.getLoginToken()){
              ctx.$router.push({path:'/user'})
           }else{
             ctx.$notify({

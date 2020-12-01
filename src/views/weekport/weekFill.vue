@@ -103,7 +103,7 @@ import {getWeekDay, getWeek,getNewData} from '../../assets/js/util'
         isUpdate:false,
         isCheck:false
        })
-       const {ctx} = getCurrentInstance()
+       const {ctx, proxy} = getCurrentInstance()
        let weekPlans1 = computed(()=>{
            return ctx.$store.state.addWeekReport.weekPlans
        })
@@ -207,7 +207,7 @@ import {getWeekDay, getWeek,getNewData} from '../../assets/js/util'
                 if(ctx.$store.state.isID){
                    parms.id = ctx.$store.state.isID
                 }
-             ctx.$HttpApi.post('/api/WeekReview/save', parms).then((res)=>{
+             proxy.$HttpApi.post('/api/WeekReview/save', parms).then((res)=>{
                 let rescodes =  res.data 
                 if(rescodes.code == 0){
                     let str = val == 1?'提交成功':'保存成功'

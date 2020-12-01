@@ -77,7 +77,7 @@ import {ref,onMounted,reactive,toRefs, getCurrentInstance} from 'vue'
     }],
             valueCol:''
        })
-       const {ctx} = getCurrentInstance()
+       const {ctx, proxy} = getCurrentInstance()
        onMounted(()=>{
             if(ctx.$router.currentRoute.value.query){
                 let query = ctx.$router.currentRoute.value.query
@@ -89,7 +89,7 @@ import {ref,onMounted,reactive,toRefs, getCurrentInstance} from 'vue'
             getTypes()
        })
        const getTypes = () =>{
-           ctx.$HttpApi.get('/api/SuggestionCategory/list').then((res)=>{
+           proxy.$HttpApi.get('/api/SuggestionCategory/list').then((res)=>{
             if(res.code == 0){
                 data.columns = res.data
             }

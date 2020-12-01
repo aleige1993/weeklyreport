@@ -65,7 +65,7 @@ import {getWeekDay, getWeek,getNewData} from '../../assets/js/util'
            finished:false,
 
        })
-       const {ctx} = getCurrentInstance()
+       const {ctx, proxy} = getCurrentInstance()
     //    const onRefresh = ()=>{
     //         data.finished = false; 
     //         data.loading = true;
@@ -105,7 +105,7 @@ import {getWeekDay, getWeek,getNewData} from '../../assets/js/util'
             loadingType: 'spinner',
             });
          if(item.status == '待上报'){ 
-              ctx.$HttpApi.get(`/api/WeekReview/leader/${item.weekID}`).then((res)=>{
+              proxy.$HttpApi.get(`/api/WeekReview/leader/${item.weekID}`).then((res)=>{
                  if(res.code == 0){
                    let addWeekReport = ctx.$store.state.addWeekReport
                     if(res.data.detail.id){ 
@@ -143,7 +143,7 @@ import {getWeekDay, getWeek,getNewData} from '../../assets/js/util'
         
      }
        const getUserportlist = ()=>{
-            ctx.$HttpApi.post('/api/WeekReview/list',{}).then((res)=>{
+            proxy.$HttpApi.post('/api/WeekReview/list',{}).then((res)=>{
                 let rescodes =  res.data
                 if(rescodes.code == 0){
                     data.list = rescodes.data

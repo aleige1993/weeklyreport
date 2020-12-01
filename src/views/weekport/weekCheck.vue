@@ -139,7 +139,7 @@ import {getWeekDay, getWeek,getNewData,fromTime} from '../../assets/js/util'
            empWeekDate:''
 
        })
-      const {ctx } = getCurrentInstance()
+      const {ctx, proxy } = getCurrentInstance()
        //控制layer
        const onShowLayer = (val) =>{
            if(val=='redy'){
@@ -196,7 +196,7 @@ import {getWeekDay, getWeek,getNewData,fromTime} from '../../assets/js/util'
         })
         //审批权限
         const getSeeWeek= ()=>{
-        ctx.$HttpApi.get('/api/Employee/seeWeek').then((res)=>{
+        proxy.$HttpApi.get('/api/Employee/seeWeek').then((res)=>{
             if(res.data == 'N'){
                 data.isCheck = false
                 ctx.$store.state.isSeeWeek = 'N' 
@@ -210,7 +210,7 @@ import {getWeekDay, getWeek,getNewData,fromTime} from '../../assets/js/util'
        }
         //查看周报
         const getCheckweek= () =>{
-             ctx.$HttpApi.get(`/api/WeekReview/leader/${data.id}`).then((res)=>{
+             proxy.$HttpApi.get(`/api/WeekReview/leader/${data.id}`).then((res)=>{
                  if(res.code == 0){
                       let detail = res.data.detail
                      if(detail){
@@ -243,7 +243,7 @@ import {getWeekDay, getWeek,getNewData,fromTime} from '../../assets/js/util'
             }) 
         }
         const setReply = () =>{
-             ctx.$HttpApi.post('/api/WeekReview/leader/reply',{
+             proxy.$HttpApi.post('/api/WeekReview/leader/reply',{
                id:data.id,
                replyContent:data.replyContent
             }).then((res)=>{

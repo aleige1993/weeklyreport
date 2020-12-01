@@ -83,12 +83,12 @@ import {ref,onMounted,reactive,toRefs, getCurrentInstance} from 'vue'
             columns: [],
             valueCol:''
        })
-       const {ctx} = getCurrentInstance()
+       const {ctx, proxy} = getCurrentInstance()
        onMounted(()=>{
             getTypes()
        })
        const getTypes = () =>{
-           ctx.$HttpApi.get('/api/SuggestionCategory/list').then((res)=>{
+           proxy.$HttpApi.get('/api/SuggestionCategory/list').then((res)=>{
             if(res.code == 0){
                 data.columns = res.data
             }
@@ -117,7 +117,7 @@ import {ref,onMounted,reactive,toRefs, getCurrentInstance} from 'vue'
                 })
                return false 
             }
-             ctx.$HttpApi.post('/api/Suggestion/submit',{
+             proxy.$HttpApi.post('/api/Suggestion/submit',{
                 "title": data.tiltes,
                 "categoryID": data.valueCol.value,
                 "content": data.message

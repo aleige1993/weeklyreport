@@ -108,7 +108,7 @@ import UserLogin from '../../assets/js/UserLogin';
         // ctx.$router.push('/layout/password')
        })
        
-      const {ctx } = getCurrentInstance()
+      const {ctx,proxy } = getCurrentInstance()
        //控制layer
        const onShowLayer = () =>{
            data.showlayer = true  
@@ -118,7 +118,7 @@ import UserLogin from '../../assets/js/UserLogin';
        }
         const getExists = () =>{
             let weekDate = getWeekDay()
-            ctx.$HttpApi.get(`/api/WeekReview/exists/${weekDate}`).then((res)=>{
+            proxy.$HttpApi.get(`/api/WeekReview/exists/${weekDate}`).then((res)=>{
                 data.weekd = getWeek()
                 if(res.code==0){
                     data.isSubmit = res.data
@@ -134,7 +134,7 @@ import UserLogin from '../../assets/js/UserLogin';
         }
 
        const getSummary= ()=>{
-            ctx.$HttpApi.get('/api/Employee/summary').then((res)=>{
+            proxy.$HttpApi.get('/api/Employee/summary').then((res)=>{
                 const respoen = res.data
                 data.delayWriteWeekCount = respoen.delayWriteWeekCount,
                 data.replyingWeekCount= respoen.replyingWeekCount,
@@ -144,7 +144,7 @@ import UserLogin from '../../assets/js/UserLogin';
             })
        } 
         const getSeeWeek= ()=>{
-        ctx.$HttpApi.get('/api/Employee/seeWeek').then((res)=>{
+        proxy.$HttpApi.get('/api/Employee/seeWeek').then((res)=>{
             if(res.data == 'N'){
                 data.isCheck = false
                 ctx.$store.state.isSeeWeek = 'N' 
@@ -189,7 +189,7 @@ import UserLogin from '../../assets/js/UserLogin';
          }
       const getWeekReport = () =>{
             let week = getWeekDay()
-            ctx.$HttpApi.get(`/api/WeekReview/${week}`).then((res)=>{
+            proxy.$HttpApi.get(`/api/WeekReview/${week}`).then((res)=>{
             if(res.code == 0){
                let addWeekReport = ctx.$store.state.addWeekReport
                if(res.data.id){ 
@@ -213,7 +213,7 @@ import UserLogin from '../../assets/js/UserLogin';
 
         }
         const getUserInfo = () =>{ 
-            ctx.$HttpApi.get(`/api/Employee/info`).then((res)=>{
+            proxy.$HttpApi.get(`/api/Employee/info`).then((res)=>{
             if(res.code == 0){
               data.employeeName = res.data.employeeName
               if(res.data.posNames){

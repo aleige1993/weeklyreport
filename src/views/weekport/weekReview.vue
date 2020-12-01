@@ -86,7 +86,7 @@ export default {
       pageSize: 20,
 
     });
-    const { ctx } = getCurrentInstance();
+    const { ctx,proxy } = getCurrentInstance();
     onMounted(() => {
       // getUserportlist();
     });
@@ -154,7 +154,7 @@ export default {
         data.refreshing = false;
       }
 
-      ctx.$HttpApi
+      proxy.$HttpApi
         .post("/api/WeekReview/leader/list", {
           page: data.page,
           pageSize: data.pageSize,

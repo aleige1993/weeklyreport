@@ -33,7 +33,7 @@ export default {
             paswd3: ''
         })
         const {
-            ctx
+            ctx,proxy
         } = getCurrentInstance()
         onMounted(() => {
             // ctx.$notify({
@@ -58,7 +58,7 @@ export default {
                     type: 'warning',
                 })
             }
-            ctx.$HttpApi.post('/api/Employee/changepwd',{
+            proxy.$HttpApi.post('/api/Employee/changepwd',{
                 oldPassword: data.paswd1,
                 newPassword: data.paswd2,
                 againPassword:data.paswd3

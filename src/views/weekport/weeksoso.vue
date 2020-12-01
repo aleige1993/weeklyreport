@@ -77,7 +77,7 @@ import {getWeekDay, getWeek,getNewData} from '../../assets/js/util'
            islist:false
 
        })
-       const { ctx } = getCurrentInstance();
+       const { ctx , proxy} = getCurrentInstance();
        const gotoDateils = (item) => {
       ctx.$router.push({
         path: "/layout/weekCheck",
@@ -91,7 +91,7 @@ import {getWeekDay, getWeek,getNewData} from '../../assets/js/util'
       });
     };
     const onSearch = () => {
-      ctx.$HttpApi
+      proxy.$HttpApi
         .post("/api/WeekReview/leader/list",{
           page:1,
           pageSize:10000,
