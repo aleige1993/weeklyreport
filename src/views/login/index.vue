@@ -19,18 +19,18 @@
   export default {
     name:'',
     props:[''],
-    created(){
-       var clientHeight = document.documentElement.clientHeight || document.body.clientHeight;
-      window.onresize = function() {
-          var nowClientHeight = document.documentElement.clientHeight || document.body.clientHeight;
-          if (clientHeight - nowClientHeight > 60 ) {
-              document.getElementById("apply").classList.add("focusState");
-          }
-          else {
-            document.getElementById("apply").classList.remove("focusState");
-          } 
-      };
-    },
+    // created(){
+    //    var clientHeight = document.documentElement.clientHeight || document.body.clientHeight;
+    //   window.onresize = function() {
+    //       var nowClientHeight = document.documentElement.clientHeight || document.body.clientHeight;
+    //       if (clientHeight - nowClientHeight > 60 ) {
+    //           document.getElementById("apply").classList.add("focusState");
+    //       }
+    //       else {
+    //         document.getElementById("apply").classList.remove("focusState");
+    //       } 
+    //   };
+    // },
     setup(){
       const data = reactive({
         tel:'',
