@@ -161,6 +161,13 @@ import {getWeekDay, getWeek,getNewData,fromTime} from '../../assets/js/util'
            data.boxIput = false
        }
         const onBoxComf = () =>{
+            if(data.replyContent =="" || data.replyContent == null ){
+                 proxy.$notify({
+                        message: '批复意见不能为空',
+                        type: 'warning',
+                })
+                return false
+            }
             data.boxComf = true
             data.boxIput = false
         }

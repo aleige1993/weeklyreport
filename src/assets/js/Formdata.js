@@ -29,6 +29,10 @@ class HttpApi {
                 method: 'POST',
                 headers: _headers
             }).then(res => {
+                if(res.data.code == 401){
+                    UserLogin.removeLoginInfo()
+                    window.location.href="/"
+                }
                 return res || {};
             }).catch(err => {
                 Notify({
@@ -59,8 +63,9 @@ class HttpApi {
             params: _params,
             headers: _headers
         }).then(res => {
-            if (typeof res === 'string') {
-                res = JSON.parse(res);
+            if(res.data.code == 401){
+                UserLogin.removeLoginInfo()
+                window.location.href="/"
             }
             return res.data || {};
         }).catch(err => {
