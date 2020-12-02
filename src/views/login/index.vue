@@ -34,6 +34,7 @@
           proxy.$UserLogin.setLoginInfo(res.headers.token)
           proxy.$router.push({path:'/user'})
           console.log(proxy)
+          console.log(ctx)
         }else{
           if(proxy.$UserLogin.getLoginToken()){
              proxy.$router.push({path:'/user'})

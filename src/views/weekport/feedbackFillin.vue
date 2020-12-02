@@ -83,7 +83,7 @@ import {ref,onMounted,reactive,toRefs, getCurrentInstance} from 'vue'
             columns: [],
             valueCol:''
        })
-       const {ctx, proxy} = getCurrentInstance()
+       const {proxy} = getCurrentInstance()
        onMounted(()=>{
             getTypes()
        })
@@ -99,19 +99,19 @@ import {ref,onMounted,reactive,toRefs, getCurrentInstance} from 'vue'
        
         const  submitfeedback = () =>{
             if(data.tiltes==''){
-                ctx.$notify({
+                proxy.$notify({
                     message: '请填写标题',
                     type: 'warning',
                 })
                 return false
             }else if(data.message == ''){
-                 ctx.$notify({
+                 proxy.$notify({
                     message: '请填写意见内容',
                     type: 'warning',
                 })
                return false 
             }else if(data.istype == ''){
-                 ctx.$notify({
+                 proxy.$notify({
                     message: '请选择意见类型',
                     type: 'warning',
                 })
@@ -124,12 +124,12 @@ import {ref,onMounted,reactive,toRefs, getCurrentInstance} from 'vue'
             }).then((res)=>{
                 let rescodes =  res.data
                 if(rescodes.code == 0){
-                     ctx.$toast.success('提交成功!'); 
+                     proxy.$toast.success('提交成功!'); 
                     setTimeout(()=>{
-                        ctx.$router.push('/layout/myfeedback')
+                        proxy.$router.push('/layout/myfeedback')
                     },2500)
                 }else{
-                    ctx.$notify({
+                    proxy.$notify({
                         message: res.message,
                         type: 'warning',
                     })

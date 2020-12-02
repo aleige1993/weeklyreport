@@ -103,22 +103,22 @@ import {getWeekDay, getWeek,getNewData} from '../../assets/js/util'
         isUpdate:false,
         isCheck:false
        })
-       const {ctx, proxy} = getCurrentInstance()
+       const {proxy} = getCurrentInstance()
        let weekPlans1 = computed(()=>{
-           return ctx.$store.state.addWeekReport.weekPlans
+           return proxy.$store.state.addWeekReport.weekPlans
        })
         let weekNextPlans1 = computed(()=>{
-           return ctx.$store.state.addWeekReport.weekNextPlans
+           return proxy.$store.state.addWeekReport.weekNextPlans
        })
         let weekMend1 = computed(()=>{
             
-           return ctx.$store.state.addWeekReport.weekMend
+           return proxy.$store.state.addWeekReport.weekMend
        })
        let isUpdate = computed(()=>{
-           return ctx.$store.state.isUpdate
+           return proxy.$store.state.isUpdate
        })
         let isWeekFill = computed(()=>{
-            if(ctx.$store.state.isWeekFill == 'Submited'){
+            if(proxy.$store.state.isWeekFill == 'Submited'){
                 data.isCheck = true
                 return true
             }else{
@@ -129,13 +129,13 @@ import {getWeekDay, getWeek,getNewData} from '../../assets/js/util'
 
        onMounted(()=>{ 
         //    if(data.isStuts == 1){
-        //     ctx.$store.commit('setHead',[4,'填写周报',''])
+        //     proxy.$store.commit('setHead',[4,'填写周报',''])
         //    }else if(data.isStuts == 2){
-        //     ctx.$store.commit('setHead',[3,'填写周报 - ','已延迟'])
+        //     proxy.$store.commit('setHead',[3,'填写周报 - ','已延迟'])
         //    }else if(data.isStuts == 3){
-        //     ctx.$store.commit('setHead',[2,'查看周报 - ',''])
+        //     proxy.$store.commit('setHead',[2,'查看周报 - ',''])
         //    }
-        console.log(ctx.$store.state.isWeekFill)
+        console.log(proxy.$store.state.isWeekFill)
            let week = getWeekDay()
            let weekend = getNewData(week, 6)
             data.weekstart = week
@@ -145,7 +145,7 @@ import {getWeekDay, getWeek,getNewData} from '../../assets/js/util'
        })
         const addpanl = (num,item,index = '') =>{
             if(num == 1){
-                ctx.$router.push({
+                proxy.$router.push({
                 name: 'portDetail',
                 params: {
                     content:item? item.content:'',
@@ -156,7 +156,7 @@ import {getWeekDay, getWeek,getNewData} from '../../assets/js/util'
                 }
                 }) 
             }else if(num == 2){ 
-                ctx.$router.push({
+                proxy.$router.push({
                     name:'portDetail2',
                     params: {
                         content:item? item.content:'',
@@ -166,7 +166,7 @@ import {getWeekDay, getWeek,getNewData} from '../../assets/js/util'
                     }
                  })
             }else if(num == 3){
-                ctx.$router.push({
+                proxy.$router.push({
                     name:'portDetail3',
                     params: {
                         content:item? item:'',
@@ -177,21 +177,21 @@ import {getWeekDay, getWeek,getNewData} from '../../assets/js/util'
             }
         }
         const savePanl = (val) =>{
-            let addWeekReport =  ctx.$store.state.addWeekReport 
+            let addWeekReport =  proxy.$store.state.addWeekReport 
             if(addWeekReport.weekPlans.length == 0){
-                 ctx.$notify({
+                 proxy.$notify({
                     message: '本周工作总结不能为空',
                     type: 'warning',
                 })
                 return false
             }else if(addWeekReport.weekNextPlans.length == 0){
-                ctx.$notify({
+                proxy.$notify({
                     message: '下周工作计划不能为空',
                     type: 'warning',
                 })
                 return false
             }else if(addWeekReport.weekMend.length == 0){
-                ctx.$notify({
+                proxy.$notify({
                     message: '存在问题及改进措施不能为空',
                     type: 'warning',
                 })
@@ -204,19 +204,19 @@ import {getWeekDay, getWeek,getNewData} from '../../assets/js/util'
                 "weekNextPlans": addWeekReport.weekNextPlans,
                 "weekMend": addWeekReport.weekMend
                } 
-                if(ctx.$store.state.isID){
-                   parms.id = ctx.$store.state.isID
+                if(proxy.$store.state.isID){
+                   parms.id = proxy.$store.state.isID
                 }
              proxy.$HttpApi.post('/api/WeekReview/save', parms).then((res)=>{
                 let rescodes =  res.data 
                 if(rescodes.code == 0){
                     let str = val == 1?'提交成功':'保存成功'
-                    ctx.$toast.success(str);
-                    ctx.$store.state.isID = ''
-                     ctx.$store.state.isUpdate = false
+                    proxy.$toast.success(str);
+                    proxy.$store.state.isID = ''
+                     proxy.$store.state.isUpdate = false
                     if(val != 0){
                         setTimeout(()=>{
-                            ctx.$router.push('/user')
+                            proxy.$router.push('/user')
                         },1500)
                     }
                     if(val == 1){
@@ -226,7 +226,7 @@ import {getWeekDay, getWeek,getNewData} from '../../assets/js/util'
                     }
                    
                 }else{
-                    ctx.$notify({
+                    proxy.$notify({
                         message: rescodes.message,
                         type: 'warning',
                     })
@@ -236,8 +236,8 @@ import {getWeekDay, getWeek,getNewData} from '../../assets/js/util'
             }) 
         }
          const onGoBack = () =>{
-            ctx.$store.state.isUpdate = false
-            ctx.$router.replace({path: '/user'})
+            proxy.$store.state.isUpdate = false
+            proxy.$router.replace({path: '/user'})
             }
        return{
            ...toRefs(data),

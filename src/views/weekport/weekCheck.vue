@@ -139,7 +139,7 @@ import {getWeekDay, getWeek,getNewData,fromTime} from '../../assets/js/util'
            empWeekDate:''
 
        })
-      const {ctx, proxy } = getCurrentInstance()
+      const {proxy} = getCurrentInstance()
        //控制layer
        const onShowLayer = (val) =>{
            if(val=='redy'){
@@ -161,8 +161,8 @@ import {getWeekDay, getWeek,getNewData,fromTime} from '../../assets/js/util'
         }
         onMounted(()=>{
             //id-查询id name-查看谁 isLeader-是否领导查看 isReview是否有权限批复
-            if(ctx.$router.currentRoute.value.query.id !== ''){
-                let query = ctx.$router.currentRoute.value.query
+            if(proxy.$router.currentRoute.value.query.id !== ''){
+                let query = proxy.$router.currentRoute.value.query
                 data.isLeader = query.isLeader
                 data.id = query.id
                 data.userName = query.name
@@ -171,38 +171,38 @@ import {getWeekDay, getWeek,getNewData,fromTime} from '../../assets/js/util'
                 if(data.empStatus == '已逾期'){
                     chagedata(data.empWeekDate)
                     setTimeout(()=>{
-                    ctx.$store.commit('setHead',[4,'查看周报 - ','已逾期']) 
+                    proxy.$store.commit('setHead',[4,'查看周报 - ','已逾期']) 
                     
                     },1000)
                 }
                 if( data.isLeader == 1){
-                    ctx.$store.commit('setHead',[2,'查看周报 - ',data.userName]) 
+                    proxy.$store.commit('setHead',[2,'查看周报 - ',data.userName]) 
                 }else{
-                     ctx.$store.commit('setHead',[2,'查看周报','']) 
+                     proxy.$store.commit('setHead',[2,'查看周报','']) 
                 }
             }
             getCheckweek()
             getSeeWeek()
-            //     data.query = ctx.$router.currentRoute.value.query
-            // if(ctx.$store.state.isSeeWeek == 'N'){
+            //     data.query = proxy.$router.currentRoute.value.query
+            // if(proxy.$store.state.isSeeWeek == 'N'){
             //     data.isSeeWeek =  false
-            //     ctx.$store.commit('setHead',[2,'查看周报',''])
+            //     proxy.$store.commit('setHead',[2,'查看周报',''])
             // }else{
             //     data.isSeeWeek =  true
-            //     ctx.$store.commit('setHead',[2,'查看周报', data.query.name])
+            //     proxy.$store.commit('setHead',[2,'查看周报', data.query.name])
             // }
-            // ctx.$store.commit('setHead',[2,'查看周报','']) 
-            // ctx.$store.commit('setHead',[2,'查看周报 - ','张三']) 
+            // proxy.$store.commit('setHead',[2,'查看周报','']) 
+            // proxy.$store.commit('setHead',[2,'查看周报 - ','张三']) 
         })
         //审批权限
         const getSeeWeek= ()=>{
         proxy.$HttpApi.get('/api/Employee/seeWeek').then((res)=>{
             if(res.data == 'N'){
                 data.isCheck = false
-                ctx.$store.state.isSeeWeek = 'N' 
+                proxy.$store.state.isSeeWeek = 'N' 
             }else{
                 data.isCheck = true
-                ctx.$store.state.isSeeWeek = 'Y' 
+                proxy.$store.state.isSeeWeek = 'Y' 
             }
         }).catch((err)=>{
             console.log(err)
@@ -249,13 +249,13 @@ import {getWeekDay, getWeek,getNewData,fromTime} from '../../assets/js/util'
             }).then((res)=>{
                 let rescodes =  res.data 
                 if(rescodes.code){
-                    ctx.$toast.success('提交成功'); 
+                    proxy.$toast.success('提交成功'); 
                     data.replyContent = null
                     setTimeout(()=>{
-                        ctx.$router.go(-1)
+                        proxy.$router.go(-1)
                     },1500)
                 }else{
-                    ctx.$notify({
+                    proxy.$notify({
                         message: res.message,
                         type: 'warning',
                     })
@@ -266,7 +266,7 @@ import {getWeekDay, getWeek,getNewData,fromTime} from '../../assets/js/util'
         }
         const addpanl = (num,item,index = '') =>{ 
             if(num == 1){
-                ctx.$router.push({
+                proxy.$router.push({
                 name: 'portDetail',
                 params: {
                     content:item? item.content:'',
@@ -277,7 +277,7 @@ import {getWeekDay, getWeek,getNewData,fromTime} from '../../assets/js/util'
                 }
                 }) 
             }else if(num == 2){ 
-                ctx.$router.push({
+                proxy.$router.push({
                     name:'portDetail2',
                     params: {
                         content:item? item.content:'',
@@ -287,7 +287,7 @@ import {getWeekDay, getWeek,getNewData,fromTime} from '../../assets/js/util'
                     }
                  })
             }else if(num == 3){
-                ctx.$router.push({
+                proxy.$router.push({
                     name:'portDetail3',
                     params: {
                         content:item? item:'',

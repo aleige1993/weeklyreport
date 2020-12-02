@@ -86,12 +86,12 @@ export default {
       pageSize: 20,
 
     });
-    const { ctx,proxy } = getCurrentInstance();
+    const { proxy } = getCurrentInstance();
     onMounted(() => {
       // getUserportlist();
     });
     const gotoDateils = (item) => {
-      ctx.$router.push({
+      proxy.$router.push({
         name: "weekCheck",
         query: { 
             id:item.weekID,
@@ -104,7 +104,7 @@ export default {
       });
     };
     // const getUserportlist = () => {
-    //   ctx.$HttpApi
+    //   proxy.$HttpApi
     //     .post("/api/WeekReview/leader/list",{
     //       page:1,
     //       pageSize:10000
@@ -114,7 +114,7 @@ export default {
     //       if (rescodes.code == 0) {
     //         data.list = rescodes.data;
     //       } else {
-    //         ctx.$notify({
+    //         proxy.$notify({
     //           message: rescodes.message,
     //           type: "warning",
     //         });
@@ -170,7 +170,7 @@ export default {
               data.list = data.list.concat(rescodes.data);
             }
           } else {
-            ctx.$notify({
+            proxy.$notify({
               message: rescodes.Message,
               type: "warning",
             });

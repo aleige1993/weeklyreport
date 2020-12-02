@@ -77,10 +77,10 @@ import {ref,onMounted,reactive,toRefs, getCurrentInstance} from 'vue'
     }],
             valueCol:''
        })
-       const {ctx, proxy} = getCurrentInstance()
+       const {proxy} = getCurrentInstance()
        onMounted(()=>{
-            if(ctx.$router.currentRoute.value.query){
-                let query = ctx.$router.currentRoute.value.query
+            if(proxy.$router.currentRoute.value.query){
+                let query = proxy.$router.currentRoute.value.query
                 data.tiltes = query.title
                 data.valueCol = query.categoryName
                 data.message = query.content

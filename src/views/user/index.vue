@@ -105,10 +105,10 @@ import UserLogin from '../../assets/js/UserLogin';
         getExists()
         getWeekReport()
         getUserInfo()
-        // ctx.$router.push('/layout/password')
+        // proxy.$router.push('/layout/password')
        })
        
-      const {ctx,proxy } = getCurrentInstance()
+      const {proxy } = getCurrentInstance()
        //控制layer
        const onShowLayer = () =>{
            data.showlayer = true  
@@ -147,10 +147,10 @@ import UserLogin from '../../assets/js/UserLogin';
         proxy.$HttpApi.get('/api/Employee/seeWeek').then((res)=>{
             if(res.data == 'N'){
                 data.isCheck = false
-                ctx.$store.state.isSeeWeek = 'N' 
+                proxy.$store.state.isSeeWeek = 'N' 
             }else{
                 data.isCheck = true
-                ctx.$store.state.isSeeWeek = 'Y' 
+                proxy.$store.state.isSeeWeek = 'Y' 
             }
         }).catch((err)=>{
            
@@ -159,7 +159,7 @@ import UserLogin from '../../assets/js/UserLogin';
 
         //跳转修改密码
         const changePswd =() => {
-            ctx.$router.push('/layout/password')
+            proxy.$router.push('/layout/password')
         }
         const gotoPage =(name)=>{
             if(name == 1){
@@ -169,38 +169,38 @@ import UserLogin from '../../assets/js/UserLogin';
             //     }else{
             //          isStuts = 2
             //     }
-            //     ctx.$router.currentRoute.value.query
-            //   ctx.$router.push({path:'/layout/weekfill',query:{'isStuts':isStuts}})
-             ctx.$router.push({path:'/layout/weekfill', query:{
+            //     proxy.$router.currentRoute.value.query
+            //   proxy.$router.push({path:'/layout/weekfill',query:{'isStuts':isStuts}})
+             proxy.$router.push({path:'/layout/weekfill', query:{
                 isID:data.isID,
 
              }})
             }else if(name == 2){
-                ctx.$router.push('/layout/historyPort')
+                proxy.$router.push('/layout/historyPort')
             }else if(name == 3){
-                ctx.$router.push({name:'weekReview'})
+                proxy.$router.push({name:'weekReview'})
             }else if(name == 4){
-                ctx.$router.push('/layout/feedbackfill')
+                proxy.$router.push('/layout/feedbackfill')
             }else if(name == 5){
-                ctx.$router.push('/layout/myfeedback')
+                proxy.$router.push('/layout/myfeedback')
             }else if(name == 6){
-                ctx.$router.push('/layout/feedback')
+                proxy.$router.push('/layout/feedback')
             }
          }
       const getWeekReport = () =>{
             let week = getWeekDay()
             proxy.$HttpApi.get(`/api/WeekReview/${week}`).then((res)=>{
             if(res.code == 0){
-               let addWeekReport = ctx.$store.state.addWeekReport
+               let addWeekReport = proxy.$store.state.addWeekReport
                if(res.data.id){ 
-                    ctx.$store.state.isID = res.data.id
-                     ctx.$store.state.isWeekFill = res.data.status
+                    proxy.$store.state.isID = res.data.id
+                     proxy.$store.state.isWeekFill = res.data.status
                 } 
                if(res.data == null){
                 addWeekReport.weekPlans = [],
                 addWeekReport.weekNextPlans = [],
                 addWeekReport.weekMend =[]
-                ctx.$store.state.isWeekFill = ""
+                proxy.$store.state.isWeekFill = ""
                }else{
                 addWeekReport.weekPlans = res.data.weekPlans?res.data.weekPlans:[],
                 addWeekReport.weekNextPlans = res.data.weekNextPlans?res.data.weekNextPlans:[],
@@ -229,7 +229,7 @@ import UserLogin from '../../assets/js/UserLogin';
         }
         const logout = () =>{
             UserLogin.removeLoginInfo()
-            ctx.$router.replace('/login')
+            proxy.$router.replace('/login')
         }
         const refdata = toRefs(data)
        return{

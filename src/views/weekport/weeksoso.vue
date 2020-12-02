@@ -77,9 +77,9 @@ import {getWeekDay, getWeek,getNewData} from '../../assets/js/util'
            islist:false
 
        })
-       const { ctx , proxy} = getCurrentInstance();
+       const {proxy} = getCurrentInstance();
        const gotoDateils = (item) => {
-      ctx.$router.push({
+      proxy.$router.push({
         path: "/layout/weekCheck",
         query: {
            id:item.weekID,
@@ -109,7 +109,7 @@ import {getWeekDay, getWeek,getNewData} from '../../assets/js/util'
                data.islist =true
             }
           } else {
-            ctx.$notify({
+            proxy.$notify({
               message: rescodes.message,
               type: "warning",
             });

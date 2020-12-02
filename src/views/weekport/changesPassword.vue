@@ -33,27 +33,27 @@ export default {
             paswd3: ''
         })
         const {
-            ctx,proxy
+            proxy
         } = getCurrentInstance()
         onMounted(() => {
-            // ctx.$notify({
+            // proxy.$notify({
             //     message: '您输入的原始密码不正确，请重新输入',
             //     type: 'warning',
             // })
         })
         const submit = () =>{
             if(data.paswd1 == ''){
-                ctx.$notify({
+                proxy.$notify({
                     message: '请输入原始密码',
                     type: 'warning',
                 })
             }else if(data.paswd2 == ''){
-                 ctx.$notify({
+                 proxy.$notify({
                     message: '请输入更新密码',
                     type: 'warning',
                 })
             }else if(data.paswd3 !== data.paswd2){
-                 ctx.$notify({
+                 proxy.$notify({
                     message: '与更新密码不一致',
                     type: 'warning',
                 })
@@ -64,14 +64,14 @@ export default {
                 againPassword:data.paswd3
             }).then((res)=>{
                 let rescodes =  res.data
-                 ctx.$toast.success('修改成功!'); 
+                 proxy.$toast.success('修改成功!'); 
                 if(rescodes.code){
-                    ctx.$toast.success('修改成功!'); 
+                    proxy.$toast.success('修改成功!'); 
                     setTimeout(()=>{
-                        ctx.$router.push('/login')
+                        proxy.$router.push('/login')
                     },1500)
                 }else{
-                    ctx.$notify({
+                    proxy.$notify({
                         message: res.message,
                         type: 'warning',
                     })

@@ -71,18 +71,18 @@ import {ref,onMounted,reactive,toRefs, getCurrentInstance} from 'vue'
            index:'-1',
            isCheck:false
        })
-       const {ctx} = getCurrentInstance()
+       const {proxy} = getCurrentInstance()
         onMounted(()=>{
 
-            if(ctx.$router.currentRoute.value.params.index !== ''){
-                let params = ctx.$router.currentRoute.value.params
+            if(proxy.$router.currentRoute.value.params.index !== ''){
+                let params = proxy.$router.currentRoute.value.params
                 data.content = params.content
                 data.action = params.action
                 data.result = params.result
                 data.index = params.index,
                 data.isCheck = params.isCheck?JSON.parse(params.isCheck):params.isCheck
                 if(params.isCheck == true){
-                     ctx.$store.commit('setHead',[4,'工作总结 - 查看',''])
+                     proxy.$store.commit('setHead',[4,'工作总结 - 查看',''])
                 }
             }else{
 
@@ -90,32 +90,32 @@ import {ref,onMounted,reactive,toRefs, getCurrentInstance} from 'vue'
         })
         const addplans = ()=>{
             if(data.content == ''){
-                 ctx.$notify({
+                 proxy.$notify({
                     message: '工作总结不能为空',
                     type: 'warning',
                 })
                 return false
             }else if(data.action  == ''){
-                 ctx.$notify({
+                 proxy.$notify({
                     message: '行为轨迹不能为空',
                     type: 'warning',
                 })
                 return false
             }else if(data.result == ''){
-                 ctx.$notify({
+                 proxy.$notify({
                     message: '工作效果不能为空',
                     type: 'warning',
                 })
                 return false
             } 
-            const addWeekReport = ctx.$store.state.addWeekReport
+            const addWeekReport = proxy.$store.state.addWeekReport
             if(data.index == '-1'){
                 addWeekReport.weekPlans.push({
                     'content':data.content,
                     'action':data.action,
                     'result':data.result
                 })
-                ctx.$toast.success('添加成功');
+                proxy.$toast.success('添加成功');
 
             }else{
                 addWeekReport.weekPlans[data.index] = {
@@ -123,21 +123,21 @@ import {ref,onMounted,reactive,toRefs, getCurrentInstance} from 'vue'
                     'action':data.action,
                     'result':data.result
                 }
-                ctx.$toast.success('修改成功');
+                proxy.$toast.success('修改成功');
             } 
-            ctx.$store.commit('changeUpdate', true)
+            proxy.$store.commit('changeUpdate', true)
             setTimeout(()=>{
-            ctx.$router.push('/layout/weekfill')
+            proxy.$router.push('/layout/weekfill')
             },2000)
         }
         const delpanls = () =>{
             if( data.index == '-1'){
             }else{
-                ctx.$store.commit('delPanl1', data.index)
-                 ctx.$toast.success('删除成功');
-                 ctx.$store.commit('changeUpdate', true)
+                proxy.$store.commit('delPanl1', data.index)
+                 proxy.$toast.success('删除成功');
+                 proxy.$store.commit('changeUpdate', true)
                   setTimeout(()=>{
-            ctx.$router.push('/layout/weekfill')
+            proxy.$router.push('/layout/weekfill')
             },2000)
             }
         }

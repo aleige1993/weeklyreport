@@ -46,12 +46,12 @@ export default {
       page:1,
       pageSize:20
     });
-    const { ctx, proxy } = getCurrentInstance();
+    const { proxy } = getCurrentInstance();
     onMounted(() => {
     //   getfeedback();
     });
     // const getfeedback = () => {
-    //   ctx.$HttpApi
+    //   proxy.$HttpApi
     //     .post("/api/Suggestion/list", {
     //       page: 1,
     //       pageSize: 1000,
@@ -61,7 +61,7 @@ export default {
     //       if (rescodes.code == 0) {
     //         data.list = rescodes.data;
     //       } else {
-    //         ctx.$notify({
+    //         proxy.$notify({
     //           message: rescodes.Message,
     //           type: "warning",
     //         });
@@ -79,7 +79,7 @@ export default {
       }
     };
     const gotofeedDateils = (item) => {
-      ctx.$router.push({
+      proxy.$router.push({
         path: "/layout/feedbackCheck",
         query: {
           createTime: item.createTime,
@@ -117,7 +117,7 @@ export default {
               data.list = data.list.concat(rescodes.data);
             }
           } else {
-            ctx.$notify({
+            proxy.$notify({
               message: rescodes.Message,
               type: "warning",
             });

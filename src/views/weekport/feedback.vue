@@ -49,7 +49,7 @@ export default {
       page: 1,
       pageSize: 20,
     });
-    const { ctx, proxy } = getCurrentInstance();
+    const {proxy } = getCurrentInstance();
     onMounted(() => {
       //   getfeedback();
     });
@@ -61,7 +61,7 @@ export default {
       }
     };
     const gotofeedDateils = (item) => {
-      ctx.$router.push({
+      proxy.$router.push({
         path: "/layout/feedbackCheck",
         query: {
           createTime: item.createTime,
@@ -99,7 +99,7 @@ export default {
               data.list = data.list.concat(rescodes.data);
             }
           } else {
-            ctx.$notify({
+            proxy.$notify({
               message: rescodes.Message,
               type: "warning",
             });

@@ -48,48 +48,48 @@ export default {
       index: "-1",
       isCheck:false
     });
-    const { ctx } = getCurrentInstance();
+    const { proxy } = getCurrentInstance();
     onMounted(() => {
-      if (ctx.$router.currentRoute.value.params.index !== "") {
-        let params = ctx.$router.currentRoute.value.params;
+      if (proxy.$router.currentRoute.value.params.index !== "") {
+        let params = proxy.$router.currentRoute.value.params;
         data.content = params.content;
         data.index = params.index;
          data.isCheck = params.isCheck?JSON.parse(params.isCheck):params.isCheck
            if(params.isCheck == true){
-                  ctx.$store.commit('setHead',[4,'工作计划 - 查看',''])
+                  proxy.$store.commit('setHead',[4,'工作计划 - 查看',''])
             }
       } else {
       }
     });
     const addplans = () => {
        if(data.content == ''){
-            ctx.$notify({
+            proxy.$notify({
               message: '工作计划不能为空',
               type: 'warning',
           })
           return false
         }
-      const addWeekReport = ctx.$store.state.addWeekReport;
+      const addWeekReport = proxy.$store.state.addWeekReport;
       if (data.index == "-1") {
         addWeekReport.weekNextPlans.push(data.content);
-        ctx.$toast.success("添加成功");
+        proxy.$toast.success("添加成功");
       } else {
         addWeekReport.weekNextPlans[data.index] = data.content;
-        ctx.$toast.success("修改成功");
+        proxy.$toast.success("修改成功");
       }
-      ctx.$store.commit("changeUpdate", true);
+      proxy.$store.commit("changeUpdate", true);
       setTimeout(() => {
-        ctx.$router.push("/layout/weekfill");
+        proxy.$router.push("/layout/weekfill");
       }, 2000);
     };
     const delpanls = () => {
       if (data.index == "-1") {
       } else {
-        ctx.$store.commit("delPanl3", data.index);
-        ctx.$toast.success("删除成功");
-        ctx.$store.commit("changeUpdate", true);
+        proxy.$store.commit("delPanl3", data.index);
+        proxy.$toast.success("删除成功");
+        proxy.$store.commit("changeUpdate", true);
         setTimeout(() => {
-          ctx.$router.push("/layout/weekfill");
+          proxy.$router.push("/layout/weekfill");
         }, 2000);
       }
     };

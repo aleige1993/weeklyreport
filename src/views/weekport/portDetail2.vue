@@ -54,17 +54,17 @@ import {ref,onMounted,reactive,toRefs, getCurrentInstance} from 'vue'
            num:0,
            isCheck:false
        })
-       const {ctx} = getCurrentInstance()
+       const {proxy} = getCurrentInstance()
         onMounted(()=>{
-            if(ctx.$router.currentRoute.value.params.index !== ''){
-                let params = ctx.$router.currentRoute.value.params
+            if(proxy.$router.currentRoute.value.params.index !== ''){
+                let params = proxy.$router.currentRoute.value.params
                 data.content = params.content
                 data.mend = params.mend
                 data.index = params.index
                 data.isCheck = params.isCheck?JSON.parse(params.isCheck):params.isCheck
                 data.num = parseInt(data.index)+1
                  if(params.isCheck == true){
-                     ctx.$store.commit('setHead',[4,'存在问题 - 查看',''])
+                     proxy.$store.commit('setHead',[4,'存在问题 - 查看',''])
                 }
             }else{
 
@@ -72,46 +72,46 @@ import {ref,onMounted,reactive,toRefs, getCurrentInstance} from 'vue'
         })
         const addplans = ()=>{
             if(data.content == ''){
-                 ctx.$notify({
+                 proxy.$notify({
                     message: '问题不能为空',
                     type: 'warning',
                 })
                 return false
             }else if(data.mend  == ''){
-                 ctx.$notify({
+                 proxy.$notify({
                     message: '改进措施不能为空',
                     type: 'warning',
                 })
                 return false
             }
-            const addWeekReport = ctx.$store.state.addWeekReport
+            const addWeekReport = proxy.$store.state.addWeekReport
             console.log('addWeekReport', addWeekReport.weekMend)
             if(data.index == '-1'){
                 addWeekReport.weekMend.push({
                     'content':data.content,
                     'mend':data.mend,
                 })
-                ctx.$toast.success('添加成功');
+                proxy.$toast.success('添加成功');
             }else{
                 addWeekReport.weekMend[data.index] = {
                     'content':data.content,
                     'mend':data.mend
                 }
-                ctx.$toast.success('修改成功');
+                proxy.$toast.success('修改成功');
             } 
             setTimeout(()=>{
-            ctx.$router.push('/layout/weekfill')
+            proxy.$router.push('/layout/weekfill')
             },2000)
-             ctx.$store.commit('changeUpdate', true)
+             proxy.$store.commit('changeUpdate', true)
         }
         const delpanls = () =>{
             if( data.index == '-1'){
             }else{
-                ctx.$store.commit('delPanl2', data.index)
-                 ctx.$toast.success('删除成功');
-                 ctx.$store.commit('changeUpdate', true)
+                proxy.$store.commit('delPanl2', data.index)
+                 proxy.$toast.success('删除成功');
+                 proxy.$store.commit('changeUpdate', true)
                   setTimeout(()=>{
-            ctx.$router.push('/layout/weekfill')
+            proxy.$router.push('/layout/weekfill')
             },2000)
             }
         }

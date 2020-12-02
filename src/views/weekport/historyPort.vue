@@ -65,7 +65,7 @@ import {getWeekDay, getWeek,getNewData} from '../../assets/js/util'
            finished:false,
 
        })
-       const {ctx, proxy} = getCurrentInstance()
+       const {proxy} = getCurrentInstance()
     //    const onRefresh = ()=>{
     //         data.finished = false; 
     //         data.loading = true;
@@ -94,12 +94,12 @@ import {getWeekDay, getWeek,getNewData} from '../../assets/js/util'
     })
     //历史报里面有待提交的
     const gotoUpdate = (id, name) =>{
-         ctx.$router.push({path:'/layout/weekfill', query:{
+         proxy.$router.push({path:'/layout/weekfill', query:{
                 isID:id
              }})
      }
      const gotoDateils = (item) =>{
-         ctx.$toast.loading({
+         proxy.$toast.loading({
             message: '加载中...',
             forbidClick: true,
             loadingType: 'spinner',
@@ -107,10 +107,10 @@ import {getWeekDay, getWeek,getNewData} from '../../assets/js/util'
          if(item.status == '待上报'){ 
               proxy.$HttpApi.get(`/api/WeekReview/leader/${item.weekID}`).then((res)=>{
                  if(res.code == 0){
-                   let addWeekReport = ctx.$store.state.addWeekReport
+                   let addWeekReport = proxy.$store.state.addWeekReport
                     if(res.data.detail.id){ 
-                            ctx.$store.state.isID = res.data.detail.id
-                             ctx.$store.state.isWeekFill = res.data.detail.status
+                            proxy.$store.state.isID = res.data.detail.id
+                             proxy.$store.state.isWeekFill = res.data.detail.status
                         } 
                     if(res.data.detail == null){
                         addWeekReport.weekPlans = [],
@@ -122,7 +122,7 @@ import {getWeekDay, getWeek,getNewData} from '../../assets/js/util'
                         addWeekReport.weekMend = res.data.detail.weekMend?res.data.detail.weekMend:[]
                     }
                     setTimeout(()=>{
-                        ctx.$router.push({path:'/layout/weekfill', query:{
+                        proxy.$router.push({path:'/layout/weekfill', query:{
                             isID:item.weekID
                         }})
                     },2000)
@@ -132,7 +132,7 @@ import {getWeekDay, getWeek,getNewData} from '../../assets/js/util'
                 console.log(err)
             })  
          }else{
-              ctx.$router.push({path:'/layout/weekCheck',query:{
+              proxy.$router.push({path:'/layout/weekCheck',query:{
              id:item.weekID,
              name:item.name,
              isLeader:0,
@@ -148,7 +148,7 @@ import {getWeekDay, getWeek,getNewData} from '../../assets/js/util'
                 if(rescodes.code == 0){
                     data.list = rescodes.data
                 }else{
-                    ctx.$notify({
+                    proxy.$notify({
                         message: rescodes.message,
                         type: 'warning',
                     })
