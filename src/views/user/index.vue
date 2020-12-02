@@ -127,6 +127,11 @@ import UserLogin from '../../assets/js/UserLogin';
                     }else{
                          data.showlayer = true
                     }
+                }else{
+                     proxy.$notify({
+                        message: res.message,
+                        type: 'warning',
+                    })
                 }
             }).catch((err)=>{
                 
@@ -206,6 +211,11 @@ import UserLogin from '../../assets/js/UserLogin';
                 addWeekReport.weekNextPlans = res.data.weekNextPlans?res.data.weekNextPlans:[],
                 addWeekReport.weekMend = res.data.weekMend?res.data.weekMend:[]
                }
+            }else{
+                 proxy.$notify({
+                        message: res.message,
+                        type: 'warning',
+                    })
             }
         }).catch((err)=>{
             
@@ -221,6 +231,11 @@ import UserLogin from '../../assets/js/UserLogin';
               }else{
                   data.posNames = ''
               }
+            }else{
+                 proxy.$notify({
+                        message: res.message,
+                        type: 'warning',
+                    })
             }
         }).catch((err)=>{
             
@@ -352,6 +367,8 @@ span.sp2{
     color: #FFF47E;
     font-size: 24px;
     margin-left: 10px;
+    display: inline-block;
+    max-width:100px;
 }
 .change{
     color: #8DFFE6;

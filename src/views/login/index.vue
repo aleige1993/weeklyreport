@@ -1,5 +1,5 @@
 <template>
-  <div class="dagonin">
+  <div class="dagonin" id="apply">
       <img src="../../assets/img/dadilogo.png" class="logos" alt="">
       <img src="../../assets/img/buglogo.png" class="bgtu" alt="">
       <p class="titles">登录 USERLOGIN</p>
@@ -8,7 +8,7 @@
         <van-field v-model="password" type="password" placeholder="密码" /> -->
         <input class="inputtext"  v-model="tel" type="text" placeholder="手机号码" />
         <input class="inputtext" v-model="password"  type="password" placeholder="密码"/>
-         <van-button class="buttvat" @click="subLogin" round type="primary">登录</van-button>
+         <van-button class="buttvat" @click="subLogin" round type="primary" :loading="islogin" >登录</van-button>
       </div>
      
   </div>
@@ -19,35 +19,45 @@
   export default {
     name:'',
     props:[''],
+    created(){
+       var clientHeight = document.documentElement.clientHeight || document.body.clientHeight;
+      window.onresize = function() {
+          var nowClientHeight = document.documentElement.clientHeight || document.body.clientHeight;
+          if (clientHeight - nowClientHeight > 60 ) {
+              document.getElementById("apply").classList.add("focusState");
+          }
+          else {
+            document.getElementById("apply").classList.remove("focusState");
+          } 
+      };
+    },
     setup(){
       const data = reactive({
         tel:'',
-        password:''
+        password:'',
+        islogin:false
       })
     const {ctx , proxy } = getCurrentInstance()
     const subLogin = () =>{
+      data.islogin = true
       proxy.$HttpApi.post('/api/Employee/login',{
         userName:data.tel,
         userPwd:data.password
       }).then((res)=>{
+        console.log(res)
         if(res.data.code == 0){
           proxy.$UserLogin.setLoginInfo(res.headers.token)
           proxy.$router.push({path:'/user'})
-          console.log(proxy)
-          console.log(ctx)
-        }else{
-          if(proxy.$UserLogin.getLoginToken()){
-             proxy.$router.push({path:'/user'})
-          }else{
-            proxy.$notify({
-                    message: '登录失败',
-                    type: 'warning',
-                })
-          }
+        }else{ 
+          proxy.$notify({
+              message: '账号或密码不正确',
+              type: 'warning',
+          }) 
         }
+         data.islogin = false
        
       }).catch((err)=>{
-    
+        data.islogin = false
       })
     }
       return{
@@ -59,6 +69,7 @@
 
 </script>
 <style lang='css' scoped>
+.focusState {position: absolute;}
 .dagonin{
   width: 100%;
   height: 100vh;

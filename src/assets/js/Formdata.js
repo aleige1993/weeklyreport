@@ -1,7 +1,7 @@
 // import {createApp }  from 'vue';
 import axios from 'axios';
 import UserLogin from './UserLogin';
-
+import { Notify  } from 'vant';
 // 处理Raw纯json字符串得请求
 // axios.defaults.baseURL = 'http://3541l1m171.qicp.vip';
 axios.defaults.baseURL = '';
@@ -29,9 +29,12 @@ class HttpApi {
                 method: 'POST',
                 headers: _headers
             }).then(res => {
-                console.log('aaaaaaa',res)
                 return res || {};
             }).catch(err => {
+                Notify({
+                    message:err.message,
+                    type: 'warning',
+                })
                 console.log(err)
                     // error todo
                     // Vue.prototype.$Notice.error({ title: '错误提示', desc: err });
@@ -62,6 +65,10 @@ class HttpApi {
             return res.data || {};
         }).catch(err => {
             // error todo
+            Notify({
+                message:err.message,
+                type: 'warning',
+            })
             console.log(err)
                 // Vue.prototype.$Notice.error({ title: '错误提示', desc: err });
         });

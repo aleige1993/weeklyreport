@@ -18,7 +18,12 @@ class UserLogin {
          */
     getLoginInfo() {
             if (this.isLogin()) {
-                return JSON.parse(localStorage.getItem(this.LOGININFOKEY));
+                if(localStorage.getItem(this.LOGININFOKEY) !== 'undefined'){
+                    return JSON.parse(localStorage.getItem(this.LOGININFOKEY));
+                }else{
+                    return ''
+                }
+                
             } else {
                 return {};
             }

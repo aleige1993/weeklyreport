@@ -91,6 +91,7 @@ export default {
       // getUserportlist();
     });
     const gotoDateils = (item) => {
+      console.log('gotoDateils', item)
       proxy.$router.push({
         name: "weekCheck",
         query: { 
@@ -171,9 +172,9 @@ export default {
             }
           } else {
             proxy.$notify({
-              message: rescodes.Message,
-              type: "warning",
-            });
+                message: rescodes.message,
+                type: 'warning',
+            })
           }
         })
         .catch((err) => {

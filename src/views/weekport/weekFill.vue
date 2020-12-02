@@ -134,8 +134,8 @@ import {getWeekDay, getWeek,getNewData} from '../../assets/js/util'
         //     proxy.$store.commit('setHead',[3,'填写周报 - ','已延迟'])
         //    }else if(data.isStuts == 3){
         //     proxy.$store.commit('setHead',[2,'查看周报 - ',''])
-        //    }
-        console.log(proxy.$store.state.isWeekFill)
+        //    }console.log(proxy.$store.state.isWeekFill)
+        
            let week = getWeekDay()
            let weekend = getNewData(week, 6)
             data.weekstart = week

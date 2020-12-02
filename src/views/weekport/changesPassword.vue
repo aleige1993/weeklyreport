@@ -72,7 +72,7 @@ export default {
                     },1500)
                 }else{
                     proxy.$notify({
-                        message: res.message,
+                        message: rescodes.message,
                         type: 'warning',
                     })
                 }

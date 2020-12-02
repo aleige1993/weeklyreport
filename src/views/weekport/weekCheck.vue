@@ -57,7 +57,9 @@
                 </div>
             </div>
             <div class="conter_text">
-                 <p v-if="empStatus=='已逾期'" class="addtext">已逾期</p>
+                <p v-if="empStatus=='已逾期'" class="addtext">已逾期</p>
+                <p v-if="delayed" class="addtext">已延迟</p>
+                 
                 <!-- <p class="addtext">请在右侧添加内容</p> -->
                     <li class="listQA" v-for="(item,index) in weekPlans" :key="index" @click="addpanl(1,item,index)">
                         <span class="num">{{index+1}}</span>
@@ -76,6 +78,7 @@
             <div class="conter_text">
                 <!-- <p class="addtext">请在右侧添加内容</p> -->
                  <p v-if="empStatus=='已逾期'" class="addtext">已逾期</p>
+                  <p v-if="delayed" class="addtext">已延迟</p>
                   <li class="listQA"  v-for="(item,index) in weekMend" :key="index" @click="addpanl(2,item,index)">
                         <span class="wt_num">问题{{index+1}}</span>
                         <span class="tilts van-ellipsis">{{item.content}}</span>
@@ -93,6 +96,7 @@
             <div class="conter_text">
                 <!-- <p class="addtext">请在右侧添加内容</p> -->
                  <p v-if="empStatus=='已逾期'" class="addtext">已逾期</p>
+                  <p v-if="delayed" class="addtext">已延迟</p>
                   <li class="listQA"  v-for="(item,index) in weekNextPlans" :key="index" @click="addpanl(3,item,index)">
                         <span class="num">{{index+1}}</span>
                         <span class="tilts van-ellipsis">{{item}}</span>
@@ -136,7 +140,8 @@ import {getWeekDay, getWeek,getNewData,fromTime} from '../../assets/js/util'
            weekPlans:[],
            ischanges:false,
            empStatus:'',
-           empWeekDate:''
+           empWeekDate:'',
+           delayed:false
 
        })
       const {proxy} = getCurrentInstance()
@@ -172,6 +177,14 @@ import {getWeekDay, getWeek,getNewData,fromTime} from '../../assets/js/util'
                     chagedata(data.empWeekDate)
                     setTimeout(()=>{
                     proxy.$store.commit('setHead',[4,'查看周报 - ','已逾期']) 
+                    
+                    },1000)
+                }
+                if(data.empStatus == '已延迟' && data.id == 0){
+                    chagedata(data.empWeekDate)
+                    data.delayed = true
+                    setTimeout(()=>{
+                    proxy.$store.commit('setHead',[4,'查看周报 - ','已延迟']) 
                     
                     },1000)
                 }
@@ -226,16 +239,16 @@ import {getWeekDay, getWeek,getNewData,fromTime} from '../../assets/js/util'
                         let weekend = getNewData(week, 6)
                         data.weekstart = week
                         data.weekend = weekend
-                     }else{
-                         console.log(1111111)
+                     }else{ 
                           data.replyContent = null
                            data.isReply =  res.data.isReply
                      }
-                    //  if(data.isLeader == 1){ 
-                    //  }else{
-
-                    //  }
-                    //  console.log(res)
+                    
+                 }else{
+                      proxy.$notify({
+                        message: res.message,
+                        type: 'warning',
+                    })
                  }
                  
             }).catch((err)=>{
@@ -256,7 +269,7 @@ import {getWeekDay, getWeek,getNewData,fromTime} from '../../assets/js/util'
                     },1500)
                 }else{
                     proxy.$notify({
-                        message: res.message,
+                        message: rescodes.message,
                         type: 'warning',
                     })
                 }

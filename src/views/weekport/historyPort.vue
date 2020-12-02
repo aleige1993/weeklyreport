@@ -108,10 +108,12 @@ import {getWeekDay, getWeek,getNewData} from '../../assets/js/util'
               proxy.$HttpApi.get(`/api/WeekReview/leader/${item.weekID}`).then((res)=>{
                  if(res.code == 0){
                    let addWeekReport = proxy.$store.state.addWeekReport
+                   if(res.data.detail){
                     if(res.data.detail.id){ 
-                            proxy.$store.state.isID = res.data.detail.id
-                             proxy.$store.state.isWeekFill = res.data.detail.status
-                        } 
+                        proxy.$store.state.isID = res.data.detail.id
+                            proxy.$store.state.isWeekFill = res.data.detail.status
+                    } 
+                   }
                     if(res.data.detail == null){
                         addWeekReport.weekPlans = [],
                         addWeekReport.weekNextPlans = [],
@@ -126,6 +128,11 @@ import {getWeekDay, getWeek,getNewData} from '../../assets/js/util'
                             isID:item.weekID
                         }})
                     },2000)
+                 }else{
+                      proxy.$notify({
+                        message: res.message,
+                        type: 'warning',
+                    })
                  }
                  
             }).catch((err)=>{

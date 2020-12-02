@@ -47,28 +47,28 @@
     setup(){
       // let meat = ref(0)
       // let soso = ref(0)
-      const {ctx} = getCurrentInstance()
-      // const $router = ctx.$router.currentRoute.value
-      // console.log(ctx.$router)
+      const {proxy} = getCurrentInstance()
+      // const $router = proxy.$router.currentRoute.value
+      // console.log(proxy.$router)
       // onMounted(()=>{
       //   meat.value = $router.meta.title
       //   soso.value = $router.meta.hd
       // })
      
       const onGoBack = () => {
-         ctx.$store.state.HeadData = {
+         proxy.$store.state.HeadData = {
             rose: 0, //0：不变 1:直接赋值 2：查看name 3:延迟上报 4：已逾期
             txt: '', // rose == 1 && txt!= null 
             end: '' // rose > 1 展示的不同类型的内容
         }
-       ctx.$router.go(-1)
+       proxy.$router.go(-1)
       
       }
       const gethdData = computed(()=>{
-        return ctx.$store.state.HeadData
+        return proxy.$store.state.HeadData
       })
       const  gotososo = () =>{
-        ctx.$router.push({name:'weeksoso'})
+        proxy.$router.push({name:'weeksoso'})
       }
       return{
         onGoBack,
