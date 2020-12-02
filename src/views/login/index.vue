@@ -30,14 +30,15 @@
         userName:data.tel,
         userPwd:data.password
       }).then((res)=>{
-        if(res.headers.token){
+        if(res.data.code == 0){
           proxy.$UserLogin.setLoginInfo(res.headers.token)
-          ctx.$router.push({path:'/user'})
+          proxy.$router.push({path:'/user'})
+          console.log(proxy)
         }else{
           if(proxy.$UserLogin.getLoginToken()){
-             ctx.$router.push({path:'/user'})
+             proxy.$router.push({path:'/user'})
           }else{
-            ctx.$notify({
+            proxy.$notify({
                     message: '登录失败',
                     type: 'warning',
                 })
