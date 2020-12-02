@@ -36,16 +36,16 @@
          <!-- isLeader:1,  data.isReply  replyContent-->
         <div class="fixed_review" v-if="isLeader == 0 && replyContent != null" @click="onShowLayer('redy')" >
             <img src="@/assets/img/icon_yj.png" alt="">
-            <span>查看意见1</span>
+            <span>查看意见</span>
         </div>
         <div class="fixed_review" v-if="isLeader == 1 && replyContent !== null && isReply =='N'" @click="onShowLayer('redy')" >
             <img src="@/assets/img/icon_yj.png" alt="">
            
-            <span>查看意见2</span>
+            <span>查看意见</span>
         </div>
          <div class="fixed_review" v-if="isLeader == 1 && isReply !='N' " @click="onShowLayer('changes')" >
             <img src="@/assets/img/icon_yj.png" alt="">
-            <span>批复意见3</span>
+            <span>批复意见</span>
         </div>
  
          <p class="time_p">周报时间： {{weekstart}}至{{weekend}}</p>    
@@ -278,6 +278,7 @@ import {getWeekDay, getWeek,getNewData,fromTime} from '../../assets/js/util'
             })
         }
         const addpanl = (num,item,index = '') =>{ 
+            console.time('计算时间')
             if(num == 1){
                 proxy.$router.push({
                 name: 'portDetail',

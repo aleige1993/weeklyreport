@@ -69,6 +69,7 @@ import {ref,onMounted,reactive,toRefs, getCurrentInstance} from 'vue'
             }else{
 
             }
+            console.timeEnd('计算时间')
         })
         const addplans = ()=>{
             if(data.content == ''){

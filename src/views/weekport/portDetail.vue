@@ -73,12 +73,11 @@ import {ref,onMounted,reactive,toRefs, getCurrentInstance} from 'vue'
        })
        const {proxy} = getCurrentInstance()
         onMounted(()=>{
-
             if(proxy.$router.currentRoute.value.params.index !== ''){
                 let params = proxy.$router.currentRoute.value.params
-                data.content = params.content
-                data.action = params.action
-                data.result = params.result
+                data.content = params.content !== 'null'?params.content:''
+                data.action = params.action !== 'null'?params.action:''
+                data.result = params.result!== 'null'?params.result:''
                 data.index = params.index,
                 data.isCheck = params.isCheck?JSON.parse(params.isCheck):params.isCheck
                 if(params.isCheck == true){
@@ -87,6 +86,7 @@ import {ref,onMounted,reactive,toRefs, getCurrentInstance} from 'vue'
             }else{
 
             }
+            console.timeEnd('计算时间')
         })
         const addplans = ()=>{
             if(data.content == ''){

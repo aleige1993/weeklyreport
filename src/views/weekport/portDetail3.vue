@@ -60,6 +60,7 @@ export default {
             }
       } else {
       }
+            console.timeEnd('计算时间')
     });
     const addplans = () => {
        if(data.content == ''){
